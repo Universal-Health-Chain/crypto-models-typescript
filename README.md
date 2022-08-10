@@ -1,0 +1,1 @@
+# @universal-health-chain/crypto-models-typescript
