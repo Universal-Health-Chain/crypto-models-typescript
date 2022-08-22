@@ -5,10 +5,23 @@ export interface DigestResultOpenIdData {
     alg: string;
     value: string;
 }
-/** The used language is not specified, but is usually bound to the jurisdiction of the underlying trust framework of the OP. */
-export interface AttachedSignatureDLT {
-    content_type: string;
-    content: string;
+/** ProofEBSIv2 foresees the possibility to use different types of proofs for Verifiable Credentials,
+ *  such as proofs derived from eIDAS keys (qualified) to DID keys (unqualified).
+ *  In EBSI 2.0, every V-ID will only contain a single proof, which must be derived from eIDAS keys.
+ *  Definition: https://www.w3.org/TR/vc-data-model/#proofs-signatures
+ *  See https://ec.europa.eu/digital-building-blocks/wikis/display/EBSIDOC/Verifiable+Attestation
+ *  - 'created' is REQURED, it is the ISO 8601 original timestamp of the signature, it is not the same as credential.issued (tx timestamp) (in Aries go framework use *util.TimeWithTrailingZeroMsec instead of time.Time)
+ *  - 'jws' is REQUIRED, it defines the proof value in JWS signature format (detached payload, only JWS signature data encoded as raw Base64Url-safe without header or payload)
+ *  - 'proofPurpose' is REQUIRED, e.g.: authentication, assertionMethod, keyAgreement, contractAgreement, capabilityInvocation, capabilityDelegation
+ *  - 'type' is REQUIRED, e.g.: "Ed25519Signature2018", "BbsBlsSignature2020", "BbsBlsSignatureProof2020".
+ *  - 'verificationMethod' is REQUIRED, it is the 'urndid#keyId' to verify the signature by using the public key stored on a private DID document (or in a public DID document if PQC).
+ */
+export interface ProofEBSIv2 {
+    created?: string;
+    jws?: string;
+    proofPurpose?: string;
+    type?: string;
+    verificationMethod?: string;
 }
 /** A data integrity proof is designed to be easy to use by developers and therefore strives to
  *  minimize the amount of information one has to remember to generate a proof.
@@ -47,24 +60,6 @@ export interface ProofSignatureCL {
     signatureCorrectnessProof?: string;
     signature?: string;
     type?: string;
-}
-/** EBSI foresees the possibility to use different types of proofs for Verifiable Credentials,
- *  such as proofs derived from eIDAS keys (qualified) to DID keys (unqualified).
- *  In EBSI 2.0, every V-ID will only contain a single proof, which must be derived from eIDAS keys.
- *  Definition: https://www.w3.org/TR/vc-data-model/#proofs-signatures
- *  See https://ec.europa.eu/digital-building-blocks/wikis/display/EBSIDOC/Verifiable+Attestation
- *  - 'type' is REQUIRED, e.g.: "Ed25519Signature2018", "BbsBlsSignature2020", "BbsBlsSignatureProof2020".
- *  - 'created' is REQURED, it is the ISO 8601 original timestamp of the signature, it is not the same as credential.issued (tx timestamp) (in Aries go framework use *util.TimeWithTrailingZeroMsec instead of time.Time)
- *  - 'verificationMethod' is REQUIRED, it is the 'urndid#keyId' to verify the signature by using the public key stored on a private DID document (or in a public DID document if PQC).
- *  - 'proofPurpose' is REQUIRED, e.g.: authentication, assertionMethod, keyAgreement, contractAgreement, capabilityInvocation, capabilityDelegation
- *  - 'jws' is REQUIRED, it defines the proof value in JWS signature format (detached payload, only JWS signature data encoded as raw Base64Url-safe without header or payload)
- */
-export interface ProofEBSIv2 {
-    type?: string;
-    created?: string;
-    verificationMethod?: string;
-    proofPurpose?: string;
-    jws?: string;
 }
 /** To ensure the authenticity and integrity of structured digital documents using cryptography,
  *  such as digital signatures and other digital mathematical proofs.
@@ -118,4 +113,9 @@ export interface ProofFullWithDigest extends DigestW3C, ProofDataIntegrityW3C, P
 /** LD-Proof */
 export interface LinkedDataProof {
     proof?: ProofFullW3C[];
+}
+/** The used language is not specified, but is usually bound to the jurisdiction of the underlying trust framework of the OP. */
+export interface AttachedSignatureDLT {
+    content_type: string;
+    content: string;
 }

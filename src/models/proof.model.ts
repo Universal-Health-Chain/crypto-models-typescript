@@ -9,11 +9,23 @@
   value:  string; // REQUIRED. Base64 encoded representation of the cryptographic hash.
 }
 
-/** The used language is not specified, but is usually bound to the jurisdiction of the underlying trust framework of the OP. */
-export interface AttachedSignatureDLT {
-  // desc?:          string; // OPTIONAL. Description of the document. This can be the filename or just an explanation of the content (e.g. "Back of id document")
-  content_type:   string; // e.g.: 'jws' or 'Ed25519',
-  content:        string; // bytes encoded in Base64
+/** ProofEBSIv2 foresees the possibility to use different types of proofs for Verifiable Credentials,
+ *  such as proofs derived from eIDAS keys (qualified) to DID keys (unqualified).
+ *  In EBSI 2.0, every V-ID will only contain a single proof, which must be derived from eIDAS keys.
+ *  Definition: https://www.w3.org/TR/vc-data-model/#proofs-signatures
+ *  See https://ec.europa.eu/digital-building-blocks/wikis/display/EBSIDOC/Verifiable+Attestation
+ *  - 'created' is REQURED, it is the ISO 8601 original timestamp of the signature, it is not the same as credential.issued (tx timestamp) (in Aries go framework use *util.TimeWithTrailingZeroMsec instead of time.Time)
+ *  - 'jws' is REQUIRED, it defines the proof value in JWS signature format (detached payload, only JWS signature data encoded as raw Base64Url-safe without header or payload)
+ *  - 'proofPurpose' is REQUIRED, e.g.: authentication, assertionMethod, keyAgreement, contractAgreement, capabilityInvocation, capabilityDelegation
+ *  - 'type' is REQUIRED, e.g.: "Ed25519Signature2018", "BbsBlsSignature2020", "BbsBlsSignatureProof2020".
+ *  - 'verificationMethod' is REQUIRED, it is the 'urndid#keyId' to verify the signature by using the public key stored on a private DID document (or in a public DID document if PQC).
+ */
+ export interface ProofEBSIv2  {
+	created?:               string // ISO 8601 original timestamp of the signature, it is not the same as credential.issued (tx timestamp) (in Aries go framework use *util.TimeWithTrailingZeroMsec instead of time.Time)
+	jws?:                   string // deattached signature base64url encoded
+	proofPurpose?:          string // authentication, assertionMethod, keyAgreement, contractAgreement, capabilityInvocation, capabilityDelegation
+	type?:                  string // "Ed25519Signature2018", "BbsBlsSignature2020", "BbsBlsSignatureProof2020"
+	verificationMethod?:    string // urndid#keyId to verify the signature by using the public key stored on a private DID document (not in a public DID document because of Quantum resistance)
 }
 
 /** A data integrity proof is designed to be easy to use by developers and therefore strives to
@@ -33,7 +45,7 @@ export interface ProofTypeW3C {
  *  ResourceDigest to be used both in 'credentialSubject' and in cryptographic digest message.
  *  see https://w3c-ccg.github.io/security-vocab/#Digest
  */
- export interface DigestW3C
+export interface DigestW3C
   // extends ProofTypeW3C // signatureAlgorithm  and type are not required for Digest
 {
   id?:                        string;     // the resource / document ID it refers (same as JWT.sub). NOTE: split the URN for getting the UUID
@@ -59,25 +71,6 @@ export interface ProofSignatureCL {
   signatureCorrectnessProof?: string;     // for ZKP CL-Signatures
   signature?:                 string;     // for ZKP CL-Signatures, "BbsBlsSignature2020"?
   type?:                      string;     // "Ed25519Signature2018", "BbsBlsSignature2020", "BbsBlsSignatureProof2020"
-}
-
-/** EBSI foresees the possibility to use different types of proofs for Verifiable Credentials,
- *  such as proofs derived from eIDAS keys (qualified) to DID keys (unqualified).
- *  In EBSI 2.0, every V-ID will only contain a single proof, which must be derived from eIDAS keys.
- *  Definition: https://www.w3.org/TR/vc-data-model/#proofs-signatures
- *  See https://ec.europa.eu/digital-building-blocks/wikis/display/EBSIDOC/Verifiable+Attestation
- *  - 'type' is REQUIRED, e.g.: "Ed25519Signature2018", "BbsBlsSignature2020", "BbsBlsSignatureProof2020".
- *  - 'created' is REQURED, it is the ISO 8601 original timestamp of the signature, it is not the same as credential.issued (tx timestamp) (in Aries go framework use *util.TimeWithTrailingZeroMsec instead of time.Time)
- *  - 'verificationMethod' is REQUIRED, it is the 'urndid#keyId' to verify the signature by using the public key stored on a private DID document (or in a public DID document if PQC).
- *  - 'proofPurpose' is REQUIRED, e.g.: authentication, assertionMethod, keyAgreement, contractAgreement, capabilityInvocation, capabilityDelegation
- *  - 'jws' is REQUIRED, it defines the proof value in JWS signature format (detached payload, only JWS signature data encoded as raw Base64Url-safe without header or payload)
- */
-export interface ProofEBSIv2 {
-  type?:                string; // "Ed25519Signature2018", "BbsBlsSignature2020", "BbsBlsSignatureProof2020"
-  created?:             string; // ISO 8601 original timestamp of the signature, it is not the same as credential.issued (tx timestamp) (in Aries go framework use *util.TimeWithTrailingZeroMsec instead of time.Time)
-  verificationMethod?:  string; // urndid#keyId to verify the signature by using the public key stored on a private DID document (not in a public DID document because of Quantum resistance)
-  proofPurpose?:        string; // authentication, assertionMethod, keyAgreement, contractAgreement, capabilityInvocation, capabilityDelegation
-  jws?:                 string; // deattached signature base64url encoded
 }
 
 /** To ensure the authenticity and integrity of structured digital documents using cryptography,
@@ -167,3 +160,11 @@ export interface LinkedDataProof {
   "signatureCorrectnessProof": "SNQbW3u1QV5q89qhxA1xyVqFa6jCrKwv...dsRypyuGGK3RhhBUvH1tPEL8orH"
 }
 */
+
+/** The used language is not specified, but is usually bound to the jurisdiction of the underlying trust framework of the OP. */
+export interface AttachedSignatureDLT {
+  // desc?:          string; // OPTIONAL. Description of the document. This can be the filename or just an explanation of the content (e.g. "Back of id document")
+  content_type:   string; // e.g.: 'jws' or 'Ed25519',
+  content:        string; // bytes encoded in Base64
+}
+
