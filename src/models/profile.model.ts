@@ -18,7 +18,7 @@ export interface ProfileProtected {
     lastAccess?: number; // unix time (seconds)
     activationData: {
       clientAppId: string;
-      deviceId?: ProtectedDataAESCCM;
+      protectedDeviceId?: ProtectedDataAESCCM;
       protectedInstallCode?: ProtectedDataAESCCM;
     };
     protectedDbPassword: ProtectedDataAESCCM;

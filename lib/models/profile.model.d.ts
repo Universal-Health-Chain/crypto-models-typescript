@@ -16,7 +16,7 @@ export interface ProfileProtected {
     lastAccess?: number;
     activationData: {
         clientAppId: string;
-        deviceId?: ProtectedDataAESCCM;
+        protectedDeviceId?: ProtectedDataAESCCM;
         protectedInstallCode?: ProtectedDataAESCCM;
     };
     protectedDbPassword: ProtectedDataAESCCM;
