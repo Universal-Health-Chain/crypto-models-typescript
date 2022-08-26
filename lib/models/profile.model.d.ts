@@ -1,25 +1,23 @@
 import { ProtectedDataAESCCM } from "./aes.model";
 /** If the "installCode" value is not provided the app will work in "demo" mode */
 export interface NewProfileData {
-    userDid: string;
+    clientAppId: string;
+    deviceId?: string;
+    installCode?: string;
     nickname: string;
-    activationData: {
-        clientAppId: string;
-        deviceId?: string;
-        installCode?: string;
-    };
+    userDid: string;
 }
 /** ProfileProtected has no personal data (only nickname).
+ *   - "userDID": employeeRole or personal public DID.
+ *  - "protectedInstallCode": if it does not exist the app will work in "demo" mode.
  *  Once the database is opened the personal data will be available (wallet).
  */
 export interface ProfileProtected {
-    userDid: string;
-    nickname: string;
+    clientAppId: string;
     lastAccess?: number;
-    activationData: {
-        clientAppId: string;
-        protectedDeviceId?: ProtectedDataAESCCM;
-        protectedInstallCode?: ProtectedDataAESCCM;
-    };
+    nickname: string;
+    protectedDeviceId?: ProtectedDataAESCCM;
+    protectedInstallCode?: ProtectedDataAESCCM;
     protectedDbPassword: ProtectedDataAESCCM;
+    userDid: string;
 }
