@@ -1,11 +1,13 @@
 import { ProtectedDataAESCCM } from "./aes.model";
 
+/** If the "installCode" value is not provided the app will work in "demo" mode */
 export interface NewProfileData {
     userDid: string;
     nickname: string;
     activationData: {
       clientAppId: string;
       deviceId?: string;
+      installCode?: string; // demo mode if not provided
     };
   }
 
