@@ -2,12 +2,12 @@ import { ProtectedDataAESCCM } from "./aes.model";
 
 /** If the "installCode" value is not provided the app will work in "demo" mode */
 export interface NewProfileData {
-    clientAppId: string;
-    deviceId?: string;
-    installCode?: string; // demo mode if not provided
-    nickname: string;
-    userDid: string;
-  }
+  clientAppId: string;
+  deviceId?: string;
+  installCode?: string; // demo mode if not provided
+  nickname: string;
+  userDid: string;
+}
 
 /** ProfileProtected has no personal data (only nickname).
  *   - "userDID": employeeRole or personal public DID.
