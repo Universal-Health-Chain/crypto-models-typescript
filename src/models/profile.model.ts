@@ -16,12 +16,5 @@ export interface ProfileProtected {
   created:        number;
   lastAccess?:    number;
   data?:          ProtectedDataAESCCM;
-  secret:         string;
-}
-
-export interface ProfileProtectedData {
-  deviceId?:    string;
-  dbPassword:   string;
-  installCode?: string;
-  userDid:      string;
+  secret:         ProtectedDataAESCCM;
 }
