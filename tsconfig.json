@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "lib": ["es2015"],
-    "target": "ESNext",
+    "target": "es2015",
     "module": "commonjs",
     "types": ["jest", "node"],
     "moduleResolution": "node",

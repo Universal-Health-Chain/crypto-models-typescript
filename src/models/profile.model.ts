@@ -1,4 +1,15 @@
-import { ProtectedDataAESCCM } from "./aes.model";
+import { ProtectedDataAES } from "./aes.model";
+
+/** In CouchDB the DB name is lower case and starts with a letter */
+export const multibase32hexPrefix = 'v';
+
+export interface SelectObject {
+  label: string;
+  value: string;
+}
+export type ProfilesList = ProfileProtected[];
+export type SelectProfileList = SelectObject[];
+export type SelectOptions = SelectObject[];
 
 /** If the "installCode" value is not provided the app will work in "demo" mode */
 export interface NewProfileData {
@@ -15,6 +26,7 @@ export interface ProfileProtected {
   nickname:       string;
   created:        number;
   lastAccess?:    number;
-  data?:          ProtectedDataAESCCM;
-  secret:         ProtectedDataAESCCM;
+  data?:          ProtectedDataAES; // it is like a JWE without recipients nor protected headers
+  secret:         ProtectedDataAES; // it is like a JWE without recipients nor protected headers
 }
+

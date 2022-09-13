@@ -27,12 +27,32 @@
  *  - "tag", with the value BASE64URL(JWE Authentication Tag)
  *  - "aad", with the value BASE64URL(JWE AAD)
  */
-/*
-export interface JWEncryptionJSON {
-}
-*/
 
+import { ProtectedDataAES } from "./aes.model";
 import { JWK } from "./jwk.model";
+
+/* A typical JWE example is: 
+{
+    "protected": string;
+    "recipients": [
+        {
+            "header": {
+                "kid": string;
+                "alg": string;
+            };
+            "encrypted_key": string;
+        }
+    ];
+    "iv": string;
+    "ciphertext": string;
+    "tag": string;
+}*/
+
+/** A JWE has "ciphertext", "tag", "iv" (initialization vector, a nonce), "protected" (headers) and optional "unprotected" (headers) */
+export interface JWEData extends
+    ProtectedDataAES, // "ciphertext", "tag" and "iv" (initialization vector, a nonce)
+    BaseJWE // recipients, protected and optional unprotected headers
+{}
 
 /**
  *  - protected: Encoded a base64-url string containing the 'enc' performed on the plaintext (e.g.: "A256GCM") and the 'typ' (e.g.: "didcomm-envelope-enc").
@@ -43,10 +63,10 @@ import { JWK } from "./jwk.model";
  *  The code should examine presence of 'payload', 'ciphertext' or 'enc' properties in JWE, or by checking the value of 'alg'.
  *  JWSs have a "payload" member and JWEs do not. JWEs have a "ciphertext" member and JWSs do not.
  */
-export interface BaseJWE {
-    protectedHdersJWE:  string;             // Encoded a base64-url string containing the encryption algorithm ('alg') performed on the plaintext (e.g.: 'dir' for direct encryption).
-    unprotected?:       UnprotectedHdersJWE; // e.g.: jku
-    recipients:         RecipientDataJWE[]; // CEK encrypted to each recipient // Includes ephemeral (anoncrypt) key
+ export interface BaseJWE {
+    protected:      string;             // Encoded a base64-url string containing the encryption algorithm ('alg') performed on the plaintext (e.g.: 'dir' for direct encryption).
+    unprotected?:   UnprotectedHdersJWE; // e.g.: jku
+    recipients:     RecipientDataJWE[]; // CEK encrypted to each recipient // Includes ephemeral (anoncrypt) key
 }
 
 /**
@@ -58,7 +78,7 @@ export interface BaseJWE {
  export interface UnencryptedJWE {
     protectHdersDecoded?:   ProtectHdersDecoded;    // 'enc' performed on the plaintext (e.g.: "A256GCM") and the 'typ' (e.g.: "didcomm-envelope-enc")
     unprotected?:           UnprotectedHdersJWE;    // e.g.: jku
-    recipients?:            RecipientDataJWE[];     // when it is not encrypted has no sense storing the CEK (e.g.: when creating before encryption)
+    recipients:             RecipientDataJWE[];     // when it is not encrypted has no sense storing the CEK (e.g.: when creating before encryption)
     plaintext?:             any;                    // it can be a JSON object such as a FHIR Bundle.
 }
 
@@ -76,14 +96,15 @@ export interface BaseJWE {
  *  - with the encryption algorithm defined by the header element 'protected.alg' and 'protected.enc'.
  */
  export interface JWEDataAES extends 
+    JWEData,   
     UnencryptedJWE // protectHdersDecoded, unprotectedHders, recipients, plaintext
 {
-    protectedHdersJWE?: string; // the original protected headers Base64Url encoded
-    ciphertext?:        string; // base64Url
-    aad?:               string; // base64url(sha256(concat('.',sort([recipients[0].kid, ..., recipients[n].kid]))))),  // AEAD authenticated data (possibly implicit) // AEAD nonce as base64-url string.
-    iv?:                string; // base64Url
-    tag?:               string; // base64Url
-    cek?:               string; // decapsulated CEK for AES encryption to create the cipertext.
+    protected:      string; // the original protected headers Base64Url encoded
+    ciphertext:     string; // base64Url
+    aad?:           string; // base64url(sha256(concat('.',sort([recipients[0].kid, ..., recipients[n].kid]))))),  // AEAD authenticated data (possibly implicit) // AEAD nonce as base64-url string.
+    iv:            string; // base64Url
+    tag:           string; // base64Url
+    cek?:           string; // decapsulated CEK for AES encryption to create the cipertext.
 }
 
 export interface RecipientsData {
@@ -112,7 +133,7 @@ export interface StandardJWE extends
     BaseJWE,         // protected, unprotected, recipients
     JWEDataAES    // ciphertext, iv and tag
 {
-    protectedHdersJWE:  string;                         // Encoded a base64-url string containing the encryption algorithm ('alg') performed on the plaintext (e.g.: 'dir' for direct encryption).
+    protected:  string;                         // Encoded a base64-url string containing the encryption algorithm ('alg') performed on the plaintext (e.g.: 'dir' for direct encryption).
     unprotected?:       UnprotectedHdersJWE;             // e.g.: jku
     recipients:         RecipientDataJWE[];  // CEK encrypted to each recipient // Includes ephemeral (anoncrypt) key
 }
@@ -186,9 +207,9 @@ export interface HeaderRecipientUnprotectedDataJWE {
 export interface BackupJWE extends
     JWEDataAES    // ciphertext, aad, iv and tag
 {
-    protected:      ProtectHdersDecoded;               // decode/encode Base64-safeUrl for input/output
-    unprotected?:   UnprotectedHdersJWE;             // e.g.: jku
-    recipients:     RecipientDataJWE[];  // CEK encrypted to each recipient // Includes ephemeral (anoncrypt) key
+    protectHdersDecoded:    ProtectHdersDecoded;               // decode/encode Base64-safeUrl for input/output
+    unprotected?:           UnprotectedHdersJWE;             // e.g.: jku
+    recipients:             RecipientDataJWE[];  // CEK encrypted to each recipient // Includes ephemeral (anoncrypt) key
 }
 
 /** JWE compact serialization is only for one recipient; the JWE compact token is built with five key components, each separated by a period (.):

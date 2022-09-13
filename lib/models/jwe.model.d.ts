@@ -24,7 +24,12 @@
  *  - "tag", with the value BASE64URL(JWE Authentication Tag)
  *  - "aad", with the value BASE64URL(JWE AAD)
  */
+import { ProtectedDataAES } from "./aes.model";
 import { JWK } from "./jwk.model";
+/** A JWE has "ciphertext", "tag", "iv" (initialization vector, a nonce), "protected" (headers) and optional "unprotected" (headers) */
+export interface JWEData extends ProtectedDataAES, // "ciphertext", "tag" and "iv" (initialization vector, a nonce)
+BaseJWE {
+}
 /**
  *  - protected: Encoded a base64-url string containing the 'enc' performed on the plaintext (e.g.: "A256GCM") and the 'typ' (e.g.: "didcomm-envelope-enc").
  *  - unprotected:  e.g.: jku
@@ -35,7 +40,7 @@ import { JWK } from "./jwk.model";
  *  JWSs have a "payload" member and JWEs do not. JWEs have a "ciphertext" member and JWSs do not.
  */
 export interface BaseJWE {
-    protectedHdersJWE: string;
+    protected: string;
     unprotected?: UnprotectedHdersJWE;
     recipients: RecipientDataJWE[];
 }
@@ -48,7 +53,7 @@ export interface BaseJWE {
 export interface UnencryptedJWE {
     protectHdersDecoded?: ProtectHdersDecoded;
     unprotected?: UnprotectedHdersJWE;
-    recipients?: RecipientDataJWE[];
+    recipients: RecipientDataJWE[];
     plaintext?: any;
 }
 /** It has:
@@ -64,12 +69,12 @@ export interface UnencryptedJWE {
  *  - and the Additional Authentication Data (AAD) value ('aad'),
  *  - with the encryption algorithm defined by the header element 'protected.alg' and 'protected.enc'.
  */
-export interface JWEDataAES extends UnencryptedJWE {
-    protectedHdersJWE?: string;
-    ciphertext?: string;
+export interface JWEDataAES extends JWEData, UnencryptedJWE {
+    protected: string;
+    ciphertext: string;
     aad?: string;
-    iv?: string;
-    tag?: string;
+    iv: string;
+    tag: string;
     cek?: string;
 }
 export interface RecipientsData {
@@ -94,7 +99,7 @@ export interface RecipientsData {
  */
 export interface StandardJWE extends BaseJWE, // protected, unprotected, recipients
 JWEDataAES {
-    protectedHdersJWE: string;
+    protected: string;
     unprotected?: UnprotectedHdersJWE;
     recipients: RecipientDataJWE[];
 }
@@ -158,7 +163,7 @@ export interface HeaderRecipientUnprotectedDataJWE {
  *      - with the encryption algorithm defined by the header element 'protected.alg' and 'protected.enc'.
  */
 export interface BackupJWE extends JWEDataAES {
-    protected: ProtectHdersDecoded;
+    protectHdersDecoded: ProtectHdersDecoded;
     unprotected?: UnprotectedHdersJWE;
     recipients: RecipientDataJWE[];
 }
