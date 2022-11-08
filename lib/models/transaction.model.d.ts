@@ -1,4 +1,4 @@
-import { DidData } from "./DID.model";
+import { DidData } from "./did.model";
 import { DIDCommAttachment } from "./didComm.model";
 export interface RequestObject {
     method: string;
