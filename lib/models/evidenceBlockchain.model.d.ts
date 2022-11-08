@@ -281,6 +281,14 @@ export interface EvidenceElectronicSignatureBase {
 export interface EvidenceElectronicSignatureDLT extends EvidenceElectronicSignatureBase {
     attachments?: AttachedSignatureDLT[];
 }
+export interface EvidenceAsset extends EvidenceVerificationCommon {
+    evidence: any;
+    meta: {
+        did: string;
+        digest: DigestResultOpenIdData;
+        txn: string;
+    };
+}
 /** Electronic Record types in OpenID + vc, shc, dgc, fhir */
 export declare enum EvidenceElectronicRecordTypeUHC {
     vc = "vc",

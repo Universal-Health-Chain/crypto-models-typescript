@@ -41,7 +41,7 @@ BaseJWE {
  */
 export interface BaseJWE {
     protected: string;
-    unprotected?: UnprotectedHdersJWE;
+    unprotected?: UnprotectedHeadersJWE;
     recipients: RecipientDataJWE[];
 }
 /**
@@ -51,8 +51,8 @@ export interface BaseJWE {
  *  - plaintext: not only text but unencrypted data (e.g.: a JSON object) to be encrypted as 'cipertext' for data storage and data exchange ('plaintext' is removed when encrypted).
  */
 export interface UnencryptedJWE {
-    protectHdersDecoded?: ProtectHdersDecoded;
-    unprotected?: UnprotectedHdersJWE;
+    protectHdersDecoded?: ProtectedHeadersJWE;
+    unprotected?: UnprotectedHeadersJWE;
     recipients: RecipientDataJWE[];
     plaintext?: any;
 }
@@ -100,7 +100,7 @@ export interface RecipientsData {
 export interface StandardJWE extends BaseJWE, // protected, unprotected, recipients
 JWEDataAES {
     protected: string;
-    unprotected?: UnprotectedHdersJWE;
+    unprotected?: UnprotectedHeadersJWE;
     recipients: RecipientDataJWE[];
 }
 /** Decoded protected header claims in a JWE.
@@ -126,7 +126,7 @@ JWEDataAES {
  *  but Kyber768 PQC resistant algoritm to encapsulate the CEK).
  *  It is defined per recipient instead of in the Protected Header.
  */
-export interface ProtectHdersDecoded {
+export interface ProtectedHeadersJWE {
     alg?: string;
     cty?: string;
     enc?: string;
@@ -135,7 +135,7 @@ export interface ProtectHdersDecoded {
     typ?: string;
     zip?: string;
 }
-export interface UnprotectedHdersJWE {
+export interface UnprotectedHeadersJWE {
     jku?: string;
 }
 /** The enrypted data for recipient is not protected by the encryption (it is unprotected data).
@@ -163,8 +163,8 @@ export interface HeaderRecipientUnprotectedDataJWE {
  *      - with the encryption algorithm defined by the header element 'protected.alg' and 'protected.enc'.
  */
 export interface BackupJWE extends JWEDataAES {
-    protectHdersDecoded: ProtectHdersDecoded;
-    unprotected?: UnprotectedHdersJWE;
+    protectHdersDecoded: ProtectedHeadersJWE;
+    unprotected?: UnprotectedHeadersJWE;
     recipients: RecipientDataJWE[];
 }
 /** JWE compact serialization is only for one recipient; the JWE compact token is built with five key components, each separated by a period (.):

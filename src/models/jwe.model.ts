@@ -65,7 +65,7 @@ export interface JWEData extends
  */
  export interface BaseJWE {
     protected:      string;             // Encoded a base64-url string containing the encryption algorithm ('alg') performed on the plaintext (e.g.: 'dir' for direct encryption).
-    unprotected?:   UnprotectedHdersJWE; // e.g.: jku
+    unprotected?:   UnprotectedHeadersJWE; // e.g.: jku
     recipients:     RecipientDataJWE[]; // CEK encrypted to each recipient // Includes ephemeral (anoncrypt) key
 }
 
@@ -76,8 +76,8 @@ export interface JWEData extends
  *  - plaintext: not only text but unencrypted data (e.g.: a JSON object) to be encrypted as 'cipertext' for data storage and data exchange ('plaintext' is removed when encrypted).
  */
  export interface UnencryptedJWE {
-    protectHdersDecoded?:   ProtectHdersDecoded;    // 'enc' performed on the plaintext (e.g.: "A256GCM") and the 'typ' (e.g.: "didcomm-envelope-enc")
-    unprotected?:           UnprotectedHdersJWE;    // e.g.: jku
+    protectHdersDecoded?:   ProtectedHeadersJWE;    // 'enc' performed on the plaintext (e.g.: "A256GCM") and the 'typ' (e.g.: "didcomm-envelope-enc")
+    unprotected?:           UnprotectedHeadersJWE;    // e.g.: jku
     recipients:             RecipientDataJWE[];     // when it is not encrypted has no sense storing the CEK (e.g.: when creating before encryption)
     plaintext?:             any;                    // it can be a JSON object such as a FHIR Bundle.
 }
@@ -134,7 +134,7 @@ export interface StandardJWE extends
     JWEDataAES    // ciphertext, iv and tag
 {
     protected:  string;                         // Encoded a base64-url string containing the encryption algorithm ('alg') performed on the plaintext (e.g.: 'dir' for direct encryption).
-    unprotected?:       UnprotectedHdersJWE;             // e.g.: jku
+    unprotected?:       UnprotectedHeadersJWE;             // e.g.: jku
     recipients:         RecipientDataJWE[];  // CEK encrypted to each recipient // Includes ephemeral (anoncrypt) key
 }
 
@@ -161,7 +161,7 @@ export interface StandardJWE extends
  *  but Kyber768 PQC resistant algoritm to encapsulate the CEK).
  *  It is defined per recipient instead of in the Protected Header.
  */
-export interface ProtectHdersDecoded {
+export interface ProtectedHeadersJWE {
     alg?:   string; // only in a compact JWE (e.g.: OpenID JWE)
     cty?:   string; // content type, e.g.: "JWT" in case of a nested signed JWT (OpenID).
     enc?:   string; // encryption algorithm, e.g.: "A256GCM".
@@ -171,7 +171,7 @@ export interface ProtectHdersDecoded {
     zip?:   string; // "DEF" to compress (deflate) the payload data bytes
 }
 
-export interface UnprotectedHdersJWE {
+export interface UnprotectedHeadersJWE {
     jku?:   string;
 }
 
@@ -207,8 +207,8 @@ export interface HeaderRecipientUnprotectedDataJWE {
 export interface BackupJWE extends
     JWEDataAES    // ciphertext, aad, iv and tag
 {
-    protectHdersDecoded:    ProtectHdersDecoded;               // decode/encode Base64-safeUrl for input/output
-    unprotected?:           UnprotectedHdersJWE;             // e.g.: jku
+    protectHdersDecoded:    ProtectedHeadersJWE;               // decode/encode Base64-safeUrl for input/output
+    unprotected?:           UnprotectedHeadersJWE;             // e.g.: jku
     recipients:             RecipientDataJWE[];  // CEK encrypted to each recipient // Includes ephemeral (anoncrypt) key
 }
 

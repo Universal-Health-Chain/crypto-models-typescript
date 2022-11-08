@@ -7,9 +7,6 @@ export interface SelectObject {
   label: string;
   value: string;
 }
-export type ProfilesList = ProfileProtected[];
-export type SelectProfileList = SelectObject[];
-export type SelectOptions = SelectObject[];
 
 /** If the "installCode" value is not provided the app will work in "demo" mode */
 export interface NewProfileData {

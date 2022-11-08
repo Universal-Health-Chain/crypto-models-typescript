@@ -352,6 +352,17 @@ export interface EvidenceElectronicSignatureDLT extends
     attachments?:   AttachedSignatureDLT[];   // OPTIONAL. Array of JSON objects containing signatures, e.g. 'jws' or 'Ed25519' signature types.
 }
 
+export interface EvidenceAsset extends 
+    EvidenceVerificationCommon
+{
+    evidence: any;
+    meta: {
+        did: string;
+        digest: DigestResultOpenIdData;
+        txn: string;
+    }
+}
+
 /** Electronic Record types in OpenID + vc, shc, dgc, fhir */
 export enum EvidenceElectronicRecordTypeUHC {
     // UHC electronic record types
