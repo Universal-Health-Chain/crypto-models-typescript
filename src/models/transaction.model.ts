@@ -26,11 +26,11 @@ export interface TransactionResourceObject {
  *  - the "type" is set in UHC as "data+jar" to predict the content of the message 
  */
 export interface DIDCommTransactionPayloadBase {
-    body?: {
+    body: {
         data: TransactionResourceObject[],
         type: "transaction";
     },
-    client_id?: string;
+    client_id: string;
 }
 
 /** Transaction: see https://gitlab.com/universal-health-chain/backend/org-management-service/-/blob/main/endpoints/cds/v1/resources/transaction/README.md)
@@ -53,7 +53,7 @@ export interface DIDCommTransactionPayloadBase {
     aud: string;
     body: {
         data: TransactionResourceObject[],
-        id: string; // optional: unique for the client application to identify the transaction internally.
+        id?: string; // optional: unique for the client application to identify the transaction internally.
         type: "transaction";
     },
     client_id: string;
