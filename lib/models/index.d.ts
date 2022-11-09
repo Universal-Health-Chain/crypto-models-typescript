@@ -13,6 +13,7 @@ export * from "./jwk.model";
 export * from "./jwm.model";
 export * from "./jwt.model";
 export * from "./kyber.model";
+export * from "./openid.model";
 export * from "./presentationW3C.model";
 export * from "./profile.model";
 export * from "./proof.model";

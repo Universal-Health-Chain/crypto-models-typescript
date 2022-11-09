@@ -60,6 +60,8 @@ export interface DIDCommTransactionPayloadBase {
     exp: number;
     jti?: string; // same as the storage document "_id"
     nbf: number;
+    response_type: "data";
+    response_mode: string; // "jwt", "form_post.jwt" ("didcomm/v2" will be possible too)
     scope: "openid";
     subject: string; // DID of the target entity (e.g.: DID of the organization)
     type: "data+jar";

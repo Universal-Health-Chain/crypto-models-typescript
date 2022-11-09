@@ -16,6 +16,7 @@ export enum MimeTypeDIDComm {
     plaintext   = 'didcomm-plain+json'
 }
 
+export const TypeAcceptsDIDCommV2 = "didcomm/v2"
 
 /** A DIDComm encrypted message is an encrypted JWM (JSON Web Messages) and hides its content from all but authorized recipients,
  *  discloses and proves the sender to exactly and only those recipients, and provides integrity guarantees.

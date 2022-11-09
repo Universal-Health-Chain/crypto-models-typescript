@@ -51,6 +51,8 @@ export interface DIDCommTransactionPayloadFull extends TransactionResourceObject
     exp: number;
     jti?: string;
     nbf: number;
+    response_type: "data";
+    response_mode: string;
     scope: "openid";
     subject: string;
     type: "data+jar";
