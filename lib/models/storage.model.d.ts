@@ -34,7 +34,9 @@ export interface MetaStorage {
  *  Note: the deactivation date is the "updated" timestamp.
  */
 export interface StorageBase {
+    "_deleted": boolean;
     "_id": string;
+    "_rev": string;
     "content": DIDCommTransactionPayloadBase;
     "meta": MetaStorage;
 }

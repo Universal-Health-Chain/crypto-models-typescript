@@ -73,35 +73,38 @@ export interface AssuranceProcessDLT {
     procedure?: string;
     status?: string;
 }
-/** Predefined method values are given in Verification Methods.
+/** Predefined method values are given in Verification Methods (https://bitbucket.org/openid/ekyc-ida/wiki/identifiers)
  * - pipp (Physical In-Person Proofing)
  * - sripp (Supervised remote In-Person Proofing)
  * - eid (Online verification of an electronic ID card)
  * - uripp (Unsupervised remote in-person proofing with video capture of the ID document, user self-portrait video and liveness checks).
  */
 export interface EvidenceDocumentDLT extends EvidenceCommonSubElementDLT {
+    attachments?: AttachmentExternalDLT;
+    check_details?: EvidenceCheckData[];
+    document_details?: DocumentDetailsDLT;
+    method: string;
+    time?: string;
     type: 'document';
     verifier: VerifierDLT;
-    attachments?: AttachmentExternalDLT;
-    validation_method?: ValidationMethodDLT;
-    verification_method?: VerificationMethodDLT;
-    document_details?: DocumentDetailsDLT;
 }
 export interface EvidenceCommonSubElementDLT {
     method: string;
     time?: string;
 }
-export interface ValidationMethodDLT {
-    type: string;
-    policy?: string;
-    procedure?: string;
-    status?: string;
-}
-export interface VerificationMethodDLT {
-    type: string;
-    policy?: string;
-    procedure?: string;
-    status?: string;
+/** CheckDetails is a JSON array representing the checks done in relation to the evidence.
+ *  When present this array MUST have at least one member.
+ *  https://bitbucket.org/openid/ekyc-ida/wiki/identifiers
+ *  - check_method: REQUIRED. String representing the check done, this includes processes such as checking the authenticity of the document, or verifying the user's biometric against an identity document. For information on predefined check_details values see Section 14.
+ *  - organization: OPTIONAL. String denoting the legal entity that performed the check. This SHOULD be included if the OP did not perform the check itself.
+ *  - txn: OPTIONAL. Identifier referring to the identity verification transaction. The OP MUST ensure that this is present when evidence_ref element is used. The OP MUST ensure that the transaction identifier can be resolved into transaction details during an audit.
+ *  - time: OPTIONAL. Time stamp in ISO 8601 [ISO8601] YYYY-MM-DDThh:mm[:ss]TZD format representing the date when the check was completed.
+ */
+export interface EvidenceCheckData {
+    check_method: string;
+    organization?: string;
+    txn?: string;
+    time?: string;
 }
 /** 'organization' is the organization ID which performed the verification on behalf of the OP */
 export interface VerifierDLT {
@@ -117,11 +120,11 @@ export interface VerifierDLT {
  *  Note: number can be used as an alias for 'document_number' for backward compatibilty purposes but will be deprecated in future releases, implementers are recommended to use document_number.
  */
 export interface DocumentDetailsBase {
-    type: string;
-    date_of_issuance: string;
     date_of_expiry: string;
+    date_of_issuance: string;
     document_number?: string;
     serial_number?: string;
+    type: string;
 }
 /** JSON object representing the document used to perform the identity verification.
  *  - type: REQUIRED. Standardized values are defined in the Identity Documents section. The OP MAY use other than the predefined values in which case the RPs will either be unable to process the assertion, just store this value for audit purposes, or apply bespoken business logic to it.
@@ -146,11 +149,10 @@ export interface DocumentDetailsDLT extends DocumentDetailsBase {
  *  - 'time': Time stamp in ISO 8601:2004 format representing the date when it was verified.
  */
 export interface EvidenceElectronicRecordBase {
-    type?: 'electronic_record';
-    validation_method?: ValidationMethodDLT;
-    verification_method?: VerificationMethodDLT;
-    verifier?: VerifierDLT;
+    check_details?: EvidenceCheckData[];
     time?: string;
+    type?: 'electronic_record';
+    verifier?: VerifierDLT;
 }
 /** OpenID 'electronic_record' evidence sub-element for blockchain.
  *  The electronic health record can be about a VC, SHC, DGC, FHIR Bundle or single resource (e.g.: a single medical record).
@@ -217,11 +219,10 @@ export interface IssuerElectronicRecordOpenID extends IssuerElectronicRecordBase
 }
 /** OpenID 'vouch' evidence sub-element */
 export interface EvidenceVouchBase {
-    type: 'vouch';
-    validation_method?: ValidationMethodDLT;
-    verification_method?: VerificationMethodDLT;
-    verifier?: VerifierDLT;
+    check_details?: EvidenceCheckData[];
     time?: string;
+    type: 'vouch';
+    verifier?: VerifierDLT;
 }
 /** OpenID 'vouch' evidence sub-element */
 export interface EvidenceVouchDLT extends EvidenceVouchBase {

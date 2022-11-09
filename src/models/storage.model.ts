@@ -43,7 +43,9 @@ import { DIDCommTransactionPayloadBase } from "./transaction.model";
  *  Note: the deactivation date is the "updated" timestamp.
  */
  export interface StorageBase {
-    "_id": string;
+    "_deleted": boolean; // PouchDB / CouchDB sets it when deleting a document.
+    "_id": string;      // PouchDB / CouchDB / MongoDB internal database ID.
+    "_rev": string;     // PouchDB / CouchDB manages the version automatically.
     "content": DIDCommTransactionPayloadBase; // payload
     "meta": MetaStorage; // "created", "contentType", "compositionStatus" and "tags" are required
 }
