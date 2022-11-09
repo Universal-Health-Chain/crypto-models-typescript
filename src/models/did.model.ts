@@ -1,3 +1,6 @@
+/* Copyright 2022 ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
+/* Apache License 2.0 */
+
 import { DidDetailsBlockchain, DidDocument, MetaDidDocument } from "./didDocument.model";
 
 /** DidData is the DID resolution data: https://w3c-ccg.github.io/did-resolution/

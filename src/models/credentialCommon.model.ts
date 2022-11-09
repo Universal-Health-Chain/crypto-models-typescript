@@ -1,3 +1,6 @@
+/* Copyright 2022 ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
+/* Apache License 2.0 */
+
 export enum CredentialContext {
     CredentialW3C = 'https://www.w3.org/2018/credentials/v1',
     SecurityW3C   = 'https://w3id.org/security/v1',

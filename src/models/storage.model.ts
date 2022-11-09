@@ -1,3 +1,6 @@
+/* Copyright 2022 ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
+/* Apache License 2.0 */
+
 import { DIDCommTransactionPayloadBase } from "./transaction.model";
 
 /** Required "contentType", "compositionStatus" and "tags".
@@ -41,6 +44,6 @@ import { DIDCommTransactionPayloadBase } from "./transaction.model";
  */
  export interface StorageBase {
     "_id": string;
-    "content": DIDCommTransactionPayloadBase;
+    "content": DIDCommTransactionPayloadBase; // payload
     "meta": MetaStorage; // "created", "contentType", "compositionStatus" and "tags" are required
 }
