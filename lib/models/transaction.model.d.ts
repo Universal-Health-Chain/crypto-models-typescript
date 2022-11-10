@@ -43,7 +43,7 @@ export interface DIDCommTransactionPayloadBase {
  *  - the "subject" refers to DID of the target entity, e.g.: an organization, professional or patient DID.
  *  - the "type" is set in UHC as "data+jar" to predict the content of the message
  */
-export interface DIDCommTransactionPayloadFull extends TransactionResourceObject {
+export interface DIDCommTransactionPayloadFull extends DIDCommTransactionPayloadBase {
     aud: string;
     body: {
         data: TransactionResourceObject[];

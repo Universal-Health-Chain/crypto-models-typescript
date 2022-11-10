@@ -51,7 +51,7 @@ export interface DIDCommTransactionPayloadBase {
  *  - the "type" is set in UHC as "data+jar" to predict the content of the message 
  */
  export interface DIDCommTransactionPayloadFull extends
-    TransactionResourceObject
+    DIDCommTransactionPayloadBase
 {
     aud: string;
     body: {
