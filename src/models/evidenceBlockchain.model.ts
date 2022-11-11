@@ -136,7 +136,7 @@ export interface EvidenceCheckData {
 /** 'organization' is the organization ID which performed the verification on behalf of the OP */
 export interface VerifierDLT {
     organization:   string; // organization ID which performed the verification on behalf of the OP.
-    txn:            string; // evidence transaction ID (base58) for audit.
+    txn?:           string; // evidence transaction ID (base58) for audit (added by SC)
 }
 
 /** OpenID 'document' evidence sub-element.

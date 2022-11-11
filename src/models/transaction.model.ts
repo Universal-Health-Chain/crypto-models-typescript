@@ -9,11 +9,14 @@ export interface RequestObject {
     url: string; // in FHIR it can be a relative URI (e.g.: Observation/<uuid>)
 }
 
+/**
+ * The resource object ID is always in the didData.didDocument.id
+ */
 export interface TransactionResourceObject {
     attachments?: DIDCommAttachment[];
     attributes?: any;
-    didData: DidData;
-    id?: string;
+    didData: DidData; // the DID is in the "didData.didDocument.id"
+    id?: string; // this "id" can be internal for the storage provider and different to the DID
     request?: RequestObject;
     type?: string;
 }

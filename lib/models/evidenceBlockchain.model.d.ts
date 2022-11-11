@@ -109,7 +109,7 @@ export interface EvidenceCheckData {
 /** 'organization' is the organization ID which performed the verification on behalf of the OP */
 export interface VerifierDLT {
     organization: string;
-    txn: string;
+    txn?: string;
 }
 /** OpenID 'document' evidence sub-element.
  * - 'type' of the (physical) document (standarized).

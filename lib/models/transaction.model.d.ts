@@ -4,6 +4,9 @@ export interface RequestObject {
     method: string;
     url: string;
 }
+/**
+ * The resource object ID is always in the didData.didDocument.id
+ */
 export interface TransactionResourceObject {
     attachments?: DIDCommAttachment[];
     attributes?: any;
