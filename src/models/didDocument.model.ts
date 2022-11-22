@@ -75,9 +75,26 @@ export interface DidDocument {
     */
    authentication?: (string | object)[];
 
-   capabilityDelegation?:  DidDocumentPublicKey[];
-   capabilityInvocation?:  DidDocumentPublicKey[];
- 
+   /** Mechanism that might be used by the DID subject to delegate a cryptographic capability to another party,
+    *  such as delegating the authority to access a specific HTTP API to a subordinate.
+    *  When a DID controller chooses to delegate their capability to access a protected HTTP API to a party other than themselves.
+    *  the delegation of the capability could be expressed in a number of ways,
+    *  e.g., as a digitally signed message that is placed into the HTTP Headers
+    *  (such as an OpenID "Bearer" access token containing the required scope and signed by the controller of the DID Document).
+    *  See https://www.w3.org/TR/did-core/#capability-delegation
+    */
+   capabilityDelegation?: (string | DidDocumentPublicKey)[];
+
+   /** Verification method that might be used by the DID subject to invoke a cryptographic capability,
+    *  such as the authorization to update the DID Document.
+    *  When a DID subject needs to access a protected HTTP API that requires authorization in order to use it,
+    *  the invocation of the capability could be expressed in a number of ways,
+    *  e.g., as a digitally signed message that is placed into the HTTP Headers
+    *  (such as an OpenID "Bearer" access token containing the required scope and signed by the controller of the DID Document).
+    *  See https://www.w3.org/TR/did-core/#capability-invocation
+    */
+   capabilityInvocation?: (string | DidDocumentPublicKey)[];
+
    /** A string or a set of strings that conform to the rules in § 3.1 DID Syntax. */
    controller?: 	          any;
 

@@ -4,7 +4,14 @@
 import { DidData } from "./did.model";
 import { DIDCommAttachment } from "./didComm.model";
 
-export interface RequestObject {
+export interface  ResourceObjectBase {
+    attachments?: DIDCommAttachment[];
+    attributes?: any;
+    id?: string;
+    type?: string;
+}
+
+export interface ResourceRequest {
     method: string;
     url: string; // in FHIR it can be a relative URI (e.g.: Observation/<uuid>)
 }
@@ -12,12 +19,14 @@ export interface RequestObject {
 /**
  * The resource object ID is always in the didData.didDocument.id
  */
-export interface TransactionResourceObject {
+export interface TransactionResourceObject extends
+    ResourceObjectBase // attachments, attributes, id, type
+{
     attachments?: DIDCommAttachment[];
     attributes?: any;
     didData: DidData; // the DID is in the "didData.didDocument.id"
     id?: string; // this "id" can be internal for the storage provider and different to the DID
-    request?: RequestObject;
+    request?: ResourceRequest;
     type?: string;
 }
 

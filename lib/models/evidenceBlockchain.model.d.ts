@@ -143,8 +143,7 @@ export interface DocumentDetailsDLT extends DocumentDetailsBase {
  *  to be extended with 'attachments' and 'record' elements for blockchain or OpenID Evidence of Electronic Record
  *  The electronic health record can be about a VC, SHC, DGC, FHIR Bundle or single resource (e.g.: a single medical record).
  *  - 'type': always 'electronic_record.
- *  - 'validation_method': how the authenticity of the document was determined.
- *  - 'verification_method': how the user was proven to be the owner of the claims.
+ *  - 'check_details': OPTIONAL. Checks done in relation to the evidence. https://bitbucket.org/openid/ekyc-ida/wiki/identifiers
  *  - 'verifier': legal entity that performed the identity verification on behalf of the OP (OpenID Provider)
  *  - 'time': Time stamp in ISO 8601:2004 format representing the date when it was verified.
  */

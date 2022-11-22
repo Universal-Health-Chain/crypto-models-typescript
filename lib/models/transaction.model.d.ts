@@ -1,18 +1,24 @@
 import { DidData } from "./did.model";
 import { DIDCommAttachment } from "./didComm.model";
-export interface RequestObject {
+export interface ResourceObjectBase {
+    attachments?: DIDCommAttachment[];
+    attributes?: any;
+    id?: string;
+    type?: string;
+}
+export interface ResourceRequest {
     method: string;
     url: string;
 }
 /**
  * The resource object ID is always in the didData.didDocument.id
  */
-export interface TransactionResourceObject {
+export interface TransactionResourceObject extends ResourceObjectBase {
     attachments?: DIDCommAttachment[];
     attributes?: any;
     didData: DidData;
     id?: string;
-    request?: RequestObject;
+    request?: ResourceRequest;
     type?: string;
 }
 /** Transaction: see https://gitlab.com/universal-health-chain/backend/org-management-service/-/blob/main/endpoints/cds/v1/resources/transaction/README.md)

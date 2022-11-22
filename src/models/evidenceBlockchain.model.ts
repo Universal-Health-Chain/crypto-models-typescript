@@ -176,8 +176,7 @@ export interface DocumentDetailsDLT extends
  *  to be extended with 'attachments' and 'record' elements for blockchain or OpenID Evidence of Electronic Record
  *  The electronic health record can be about a VC, SHC, DGC, FHIR Bundle or single resource (e.g.: a single medical record).
  *  - 'type': always 'electronic_record.
- *  - 'validation_method': how the authenticity of the document was determined.
- *  - 'verification_method': how the user was proven to be the owner of the claims.
+ *  - 'check_details': OPTIONAL. Checks done in relation to the evidence. https://bitbucket.org/openid/ekyc-ida/wiki/identifiers
  *  - 'verifier': legal entity that performed the identity verification on behalf of the OP (OpenID Provider)
  *  - 'time': Time stamp in ISO 8601:2004 format representing the date when it was verified.
  */
@@ -271,10 +270,10 @@ export interface IssuerElectronicRecordOpenID extends
 
 /** OpenID 'vouch' evidence sub-element */
 export interface EvidenceVouchBase {
-    check_details?:     EvidenceCheckData[];      // OPTIONAL. Checks done in relation to the evidence. https://bitbucket.org/openid/ekyc-ida/wiki/identifiers
-    time?:                  string;                 // OPTIONAL. Time stamp in ISO 8601:2004 [ISO8601-2004] YYYY-MM-DDThh:mm[:ss]TZD format representing the date when it was verified
-    type:                   'vouch';                // REQUIRED. Value MUST be set to 'vouch'.
-    verifier?:              VerifierDLT;            // OPTIONAL. Object denoting the legal entity that performed the identity verification on behalf of the OP.
+    check_details?: EvidenceCheckData[];    // OPTIONAL. Checks done in relation to the evidence. https://bitbucket.org/openid/ekyc-ida/wiki/identifiers
+    time?:          string;                 // OPTIONAL. Time stamp in ISO 8601:2004 [ISO8601-2004] YYYY-MM-DDThh:mm[:ss]TZD format representing the date when it was verified
+    type:           'vouch';                // REQUIRED. Value MUST be set to 'vouch'.
+    verifier?:       VerifierDLT;           // OPTIONAL. Object denoting the legal entity that performed the identity verification on behalf of the OP.
 }
 
 /** OpenID 'vouch' evidence sub-element */
