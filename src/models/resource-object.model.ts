@@ -3,7 +3,6 @@
 
 import { DIDCommAttachment } from "./didComm.model";
 import { DidDocument } from "./didDocument.model";
-import { JWK } from "./jwk.model";
 
 export interface  ResourceObjectBase {
     attachments?:   DIDCommAttachment[];            // credentials or evidences
