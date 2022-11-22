@@ -40,9 +40,8 @@ export interface DidDocumentServiceDescriptor {
     /** The type of this service. */
     type: string;
 }
-/**
- * Interface describing the expected shape of a Decentralized Identity Document.
- * https://www.w3.org/TR/did-core/#core-properties
+/** The "id" (DID) is required in a DID Document (Decentralized Identity Document).
+ *  https://www.w3.org/TR/did-core/#core-properties
  */
 export interface DidDocument {
     /** The standard context for DID Documents if 'application/did+ld+json'
@@ -79,7 +78,7 @@ export interface DidDocument {
     /** A string or a set of strings that conform to the rules in § 3.1 DID Syntax. */
     controller?: any;
     /** The DID to which this DID Document pertains. */
-    id?: string;
+    id: string;
     keyAgreement?: any;
     /** Array of public keys associated with the DID. */
     publicKey?: DidDocumentPublicKey[];

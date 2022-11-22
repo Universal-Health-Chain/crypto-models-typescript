@@ -14,7 +14,7 @@ import { DIDCommTransactionPayloadBase } from "./transaction.model";
  *  - deactivated (Conditional): required when the storage object is disabled (before deleting).
  *  Note: the deactivation date is the "updated" timestamp.      
  */
- export interface MetaStorage {
+ export interface MetaTxComposition {
     contentType: string; // required
     
     // From UHC
@@ -42,10 +42,10 @@ import { DIDCommTransactionPayloadBase } from "./transaction.model";
  *  - deactivated (Conditional): required when the storage object is disabled (before deleting).
  *  Note: the deactivation date is the "updated" timestamp.
  */
- export interface StorageBase {
+ export interface TxCompositionBase {
     "_deleted"?: boolean; // PouchDB / CouchDB sets it when deleting a document.
     "_id": string;      // PouchDB / CouchDB / MongoDB internal database ID.
     "_rev"?: string;     // PouchDB / CouchDB manages the version automatically.
     "content": DIDCommTransactionPayloadBase; // payload
-    "meta": MetaStorage; // "created", "contentType", "compositionStatus" and "tags" are required
+    "meta": MetaTxComposition; // "created", "contentType", "compositionStatus" and "tags" are required
 }

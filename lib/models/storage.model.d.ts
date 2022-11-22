@@ -10,7 +10,7 @@ import { DIDCommTransactionPayloadBase } from "./transaction.model";
  *  - deactivated (Conditional): required when the storage object is disabled (before deleting).
  *  Note: the deactivation date is the "updated" timestamp.
  */
-export interface MetaStorage {
+export interface MetaTxComposition {
     contentType: string;
     compositionStatus: string;
     sectionCode?: string;
@@ -33,10 +33,10 @@ export interface MetaStorage {
  *  - deactivated (Conditional): required when the storage object is disabled (before deleting).
  *  Note: the deactivation date is the "updated" timestamp.
  */
-export interface StorageBase {
+export interface TxCompositionBase {
     "_deleted"?: boolean;
     "_id": string;
     "_rev"?: string;
     "content": DIDCommTransactionPayloadBase;
-    "meta": MetaStorage;
+    "meta": MetaTxComposition;
 }

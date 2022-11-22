@@ -1,17 +1,23 @@
 import { DidData } from "./did.model";
 import { DIDCommAttachment } from "./didComm.model";
+import { ResourceMetadata } from "./resource-object.model";
+/** CAUTION: The internal `id` is only for the storage provider and it can be different to the *DID*.
+ *  Note: the `didData.didDocument.id` will contain the **DID** of the resource object (main identifier).
+ */
 export interface ResourceObjectBase {
     attachments?: DIDCommAttachment[];
     attributes?: any;
     id?: string;
+    meta?: ResourceMetadata;
     type?: string;
 }
+/** The `url` field can be a relative URI as per the FHIR specification (e.g.: Observation/<uuid>) */
 export interface ResourceRequest {
     method: string;
     url: string;
 }
-/**
- * The resource object ID is always in the didData.didDocument.id
+/** The `didData.didDocument.id` field is required and it is the **DID** of the resource object (main identifier).
+ *  CAUTION: The internal `id` is only for the storage provider and it can be different to the DID.
  */
 export interface TransactionResourceObject extends ResourceObjectBase {
     attachments?: DIDCommAttachment[];

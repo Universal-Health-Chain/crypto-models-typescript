@@ -52,9 +52,8 @@ import { DidDocumentPublicKey } from "./didPublicKey.model";
     type: string;
 }
 
-/**
- * Interface describing the expected shape of a Decentralized Identity Document.
- * https://www.w3.org/TR/did-core/#core-properties
+/** The "id" (DID) is required in a DID Document (Decentralized Identity Document).
+ *  https://www.w3.org/TR/did-core/#core-properties
  */
 export interface DidDocument {
 
@@ -99,7 +98,7 @@ export interface DidDocument {
    controller?: 	          any;
 
    /** The DID to which this DID Document pertains. */
-   id?: string; // only for output, to be removed before storing on blockchain
+   id: string;
 
    keyAgreement?: 	        any;
 
