@@ -1,5 +1,8 @@
 import { DIDCommAttachment } from "./didComm.model";
 import { DidDocument } from "./didDocument.model";
+/** CAUTION: The internal `id` is only for the storage provider and it can be different to the *DID*.
+ *  Note: the `didData.didDocument.id` will contain the **DID** of the resource object (main identifier).
+ */
 export interface ResourceObjectBase {
     attachments?: DIDCommAttachment[];
     attributes?: any;
@@ -8,6 +11,7 @@ export interface ResourceObjectBase {
     relationships?: ResourceRelationships;
     type?: string;
 }
+/** The `url` field can be a relative URI as per the FHIR specification (e.g.: Observation/<uuid>) */
 export interface ResourceRequest {
     method: string;
     url: string;

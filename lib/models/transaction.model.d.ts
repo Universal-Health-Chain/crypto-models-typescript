@@ -1,25 +1,10 @@
 import { DidData } from "./did.model";
 import { DIDCommAttachment } from "./didComm.model";
-import { ResourceMetadata } from "./resource-object.model";
-/** CAUTION: The internal `id` is only for the storage provider and it can be different to the *DID*.
- *  Note: the `didData.didDocument.id` will contain the **DID** of the resource object (main identifier).
- */
-export interface ResourceObjectBase {
-    attachments?: DIDCommAttachment[];
-    attributes?: any;
-    id?: string;
-    meta?: ResourceMetadata;
-    type?: string;
-}
-/** The `url` field can be a relative URI as per the FHIR specification (e.g.: Observation/<uuid>) */
-export interface ResourceRequest {
-    method: string;
-    url: string;
-}
+import { ResourceObjectBase, ResourceRequest } from "./resource-object.model";
 /** The `didData.didDocument.id` field is required and it is the **DID** of the resource object (main identifier).
  *  CAUTION: The internal `id` is only for the storage provider and it can be different to the DID.
  */
-export interface TransactionResourceObject extends ResourceObjectBase {
+export interface TxResourceObject extends ResourceObjectBase {
     attachments?: DIDCommAttachment[];
     attributes?: any;
     didData: DidData;
@@ -36,9 +21,9 @@ export interface TransactionResourceObject extends ResourceObjectBase {
  *
  *  Note: both ID ("_id"), version ("_rev") are in the parent StorageBase object (from the database)
  */
-export interface DIDCommTransactionPayloadBase {
+export interface TxDIDCommPayloadBase {
     body: {
-        data: TransactionResourceObject[];
+        data: TxResourceObject[];
         type: "transaction";
     };
     client_id: string;
@@ -58,10 +43,10 @@ export interface DIDCommTransactionPayloadBase {
  *  - the "subject" refers to DID of the target entity, e.g.: an organization, professional or patient DID.
  *  - the "type" is set in UHC as "data+jar" to predict the content of the message
  */
-export interface DIDCommTransactionPayloadFull extends DIDCommTransactionPayloadBase {
+export interface TxDIDCommPayloadFull extends TxDIDCommPayloadBase {
     aud: string;
     body: {
-        data: TransactionResourceObject[];
+        data: TxResourceObject[];
         id?: string;
         type: "transaction";
     };
@@ -74,4 +59,45 @@ export interface DIDCommTransactionPayloadFull extends DIDCommTransactionPayload
     scope: "openid";
     subject: string;
     type: "data+jar";
+}
+/** Required "contentType", "compositionStatus" and "tags".
+ *  - contentType (REQUIRED): MIME type.
+ *  - compositionStatus (REQUIRED): "preliminary", "amended", "final" (frontend should not use the "error" status).
+ *  - tags (REQUIRED): non-personal data such as a list of FHIR resources, "SHC", "DGC", "COVID-19" tag, etc.
+ *  - sectionCode (Conditional): code for the health section or document category.
+ *  - sectionSystem (Conditional): default is LOINC.
+ *  - created (Conditional): required when creating a document, e.g.: "2019-03-23T06:35:22Z"
+ *  - updated (Conditional): required when updating a document, e.g.: "2022-08-10T13:40:06Z"
+ *  - deactivated (Conditional): required when the storage object is disabled (before deleting).
+ *  Note: the deactivation date is the "updated" timestamp.
+ */
+export interface TxCompositionMetadata {
+    contentType: string;
+    compositionStatus: string;
+    sectionCode?: string;
+    sectionSystem?: string;
+    created?: string;
+    deactivated?: boolean;
+    updated?: string;
+    tags?: string;
+}
+/** "_id", "meta.created", "meta.contentType", "meta.compositionStatus" and "meta.tags" are required when creating a draft in the local storage.
+ * The "content" property contains the DIDComm payload (with additional "body", "body.data[]" and "body.data[].attributes" properties).
+ * The "meta" property contains:
+ *  - created (REQUIRED): required when creating a document, e.g.: "2019-03-23T06:35:22Z"
+ *  - compositionStatus (REQUIRED): "preliminary", "amended", "final" (frontend should not use the "error" status).
+ *  - contentType (REQUIRED): MIME type (e.g.: "didcomm-plain+json")
+ *  - tags (REQUIRED): non-personal data such as a list of FHIR resources, "SHC", "DGC", "COVID-19" tag, etc.
+ *  - sectionCode (REQUIRED): code for the health section or document category.
+ *  - sectionSystem (Conditional): default is LOINC.
+ *  - updated (Conditional): required when updating a document, e.g.: "2022-08-10T13:40:06Z"
+ *  - deactivated (Conditional): required when the storage object is disabled (before deleting).
+ *  Note: the deactivation date is the "updated" timestamp.
+ */
+export interface TxCompositionBase {
+    "_deleted"?: boolean;
+    "_id": string;
+    "_rev"?: string;
+    "content": TxDIDCommPayloadBase;
+    "meta": TxCompositionMetadata;
 }
