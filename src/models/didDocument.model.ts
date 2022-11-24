@@ -40,7 +40,7 @@ import { DidDocumentPublicKey } from "./didPublicKey.model";
 /**
  * Defines a service descriptor entry present in a DID Document.
  */
- export interface DidDocumentServiceDescriptor {
+ export interface DidDocumentService {
 
     /** The fully-qualified ID of this service, e.g. `did:example:me.id;agent`. */
     id: string;
@@ -106,7 +106,7 @@ export interface DidDocument {
    publicKey?: DidDocumentPublicKey[];
 
    /** Array of services associated with the DID. */
-   service?: DidDocumentServiceDescriptor[];
+   service?: DidDocumentService[];
 
    /** A set of Verification Method maps that conform to the rules in § Verification Method properties. */
    verificationMethod?: 	  any;

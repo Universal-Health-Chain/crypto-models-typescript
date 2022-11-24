@@ -110,7 +110,7 @@ export interface TxDIDCommPayloadBase {
  *  - deactivated (Conditional): required when the storage object is disabled (before deleting).
  *  Note: the deactivation date is the "updated" timestamp.
  */
- export interface TxCompositionBase {
+ export interface TxCompositionBase { // old StorageBase
     "_deleted"?: boolean; // PouchDB / CouchDB sets it when deleting a document.
     "_id": string;      // PouchDB / CouchDB / MongoDB internal database ID.
     "_rev"?: string;     // PouchDB / CouchDB manages the version automatically.
