@@ -1,5 +1,6 @@
 import { DidData } from "./did.model";
 import { DIDCommAttachment } from "./didComm.model";
+import { StandardJWE } from "./jwe.model";
 import { ResourceObjectBase, ResourceRequest } from "./resource-object.model";
 /** The `didData.didDocument.id` field is required and it is the **DID** of the resource object (main identifier).
  *  CAUTION: The internal `id` is only for the storage provider and it can be different to the DID.
@@ -60,44 +61,99 @@ export interface TxDIDCommPayloadFull extends TxDIDCommPayloadBase {
     subject: string;
     type: "data+jar";
 }
-/** Required "contentType", "compositionStatus" and "tags".
- *  - contentType (REQUIRED): MIME type.
- *  - compositionStatus (REQUIRED): "preliminary", "amended", "final" (frontend should not use the "error" status).
- *  - tags (REQUIRED): non-personal data such as a list of FHIR resources, "SHC", "DGC", "COVID-19" tag, etc.
- *  - sectionCode (Conditional): code for the health section or document category.
- *  - sectionSystem (Conditional): default is LOINC.
- *  - created (Conditional): required when creating a document, e.g.: "2019-03-23T06:35:22Z"
- *  - updated (Conditional): required when updating a document, e.g.: "2022-08-10T13:40:06Z"
+/** If the data is less than the chunk size, it is embedded directly into the content.
+ *  Otherwise, the data is sharded into chunks by the client, and each chunk is encrypted and sent to the server.
+ *  In this case, content contains a manifest-like listing of URIs to individual chunks (integrity-protected by [HASHLINK].
+ *  Required fields are "created" and "compositionStatus".
+ *  - created (REQUIRED): UNIX epoch time (miliseconds) instead of ISO datetime, required when creating a document.
+ *  - status (REQUIRED): valid status for the composition are "preliminary", "amended", "final" or "error" (FHIR specification).
+ *  - contentType (Conditional): MIME type, required when data is sharded into chunks (e.g.: "didcomm-plain+json").
+ *  - tags (Conditional): non-personal data, it is required when the content data is created.
+ *  - sectionCode (Conditional): required code for a health section or document category in a personal wallet.
+ *  - sectionSystem (Conditional): default is "http://loinc.org" (health section or health document category).
+ *  - updated (Conditional): UNIX epoch time (miliseconds) instead of ISO datetime, required when updating a document; it can be used as the version of the composition.
  *  - deactivated (Conditional): required when the storage object is disabled (before deleting).
  *  Note: the deactivation date is the "updated" timestamp.
  */
 export interface TxCompositionMetadata {
-    contentType: string;
+    contentType?: string;
     compositionStatus: string;
     sectionCode?: string;
     sectionSystem?: string;
-    created?: string;
+    created: number;
     deactivated?: boolean;
-    updated?: string;
-    tags?: string;
+    updated?: number;
+    tags?: string[];
 }
-/** "_id", "meta.created", "meta.contentType", "meta.compositionStatus" and "meta.tags" are required when creating a draft in the local storage.
- * The "content" property contains the DIDComm payload (with additional "body", "body.data[]" and "body.data[].attributes" properties).
- * The "meta" property contains:
- *  - created (REQUIRED): required when creating a document, e.g.: "2019-03-23T06:35:22Z"
- *  - compositionStatus (REQUIRED): "preliminary", "amended", "final" (frontend should not use the "error" status).
- *  - contentType (REQUIRED): MIME type (e.g.: "didcomm-plain+json")
- *  - tags (REQUIRED): non-personal data such as a list of FHIR resources, "SHC", "DGC", "COVID-19" tag, etc.
- *  - sectionCode (REQUIRED): code for the health section or document category.
- *  - sectionSystem (Conditional): default is LOINC.
- *  - updated (Conditional): required when updating a document, e.g.: "2022-08-10T13:40:06Z"
- *  - deactivated (Conditional): required when the storage object is disabled (before deleting).
+/** Unencrypted composition data to be encrypted before being stored and sent to an external Encrypted Data Vault (EDV).
+ *  When creating a draft, the required properties are: `_id`, `index` (`label` attribute), `meta.created`, `meta.compositionStatus`.
+ * - the `content` property contains the unencrypted DIDComm payload (with additional "body", "body.data[]" and "body.data[].attributes" properties).
+ * - the `index` property contains unencrypted indexed attributes, where the `label` attribute MUST exist.
+ * - the `meta` property contains:
+ *      - created (REQUIRED): UNIX epoch time (miliseconds) instead of ISO datetime, required when creating a document.
+ *      - status (REQUIRED): valid status for the composition are "preliminary", "amended", "final" or "error" (FHIR specification).
+ *      - contentType (Conditional): MIME type, required when data is sharded into chunks (e.g.: "didcomm-plain+json").
+ *      - tags (Conditional): non-personal data, it is required when the content data is created.
+ *      - sectionCode (Conditional): required code for a health section or document category in a personal wallet.
+ *      - sectionSystem (Conditional): default is "http://loinc.org" (health section or health document category).
+ *      - updated (Conditional): UNIX epoch time (miliseconds) instead of ISO datetime, required when updating a document; it can be used as the version of the composition.
+ *      - deactivated (Conditional): required when the storage object is disabled (before deleting).
  *  Note: the deactivation date is the "updated" timestamp.
  */
 export interface TxCompositionBase {
     "_deleted"?: boolean;
     "_id": string;
     "_rev"?: string;
-    "content": TxDIDCommPayloadBase;
-    "meta": TxCompositionMetadata;
+    content?: TxDIDCommPayloadBase;
+    index: IndexDecrypted;
+    meta: TxCompositionMetadata;
+}
+/** Decrypted indexed attributes, they SHALL be encrypted before being stored.
+ *  The `label` attribute MUST exist (old BiographyEntry.title)
+ */
+export interface IndexDecrypted {
+    attributes: IndexAttribute[];
+}
+/** Encrypted indexes can be created and used to perform efficient searching
+ *  while protecting the privacy of entities that are storing information in the data vault.
+ *  When creating an encrypted composition, blinded index properties MAY be used to perform efficient searches.
+ */
+export interface IndexAttribute {
+    name: string;
+    value: string;
+    unique?: boolean;
+}
+/** Encrypted indexed attributes stored.
+ *  The `label` attribute MUST exist (old BiographyEntry.title)
+ */
+export interface IndexEncrypted {
+    attributes: IndexAttribute[];
+    hmac: {
+        id: string;
+        type: string;
+    };
+    sequence: number;
+}
+/** Unencrypted composition data to be encrypted before being stored and sent to an external Encrypted Data Vault (EDV).
+ *  When creating a draft, the required properties are: `_id`, `index` (`label` attribute), `meta.created`, `meta.compositionStatus`.
+ * - the `content` property contains the unencrypted DIDComm payload (with additional "body", "body.data[]" and "body.data[].attributes" properties).
+ * - the `index` property contains unencrypted indexed attributes, where the `label` attribute MUST exist.
+ * - the `meta` property contains:
+ *      - created (REQUIRED): UNIX epoch time (miliseconds) instead of ISO datetime, required when creating a document.
+ *      - status (REQUIRED): valid status for the composition are "preliminary", "amended", "final" or "error" (FHIR specification).
+ *      - contentType (Conditional): MIME type, required when data is sharded into chunks (e.g.: "didcomm-plain+json").
+ *      - tags (Conditional): non-personal data, it is required when the content data is created.
+ *      - sectionCode (Conditional): required code for a health section or document category in a personal wallet.
+ *      - sectionSystem (Conditional): default is "http://loinc.org" (health section or health document category).
+ *      - updated (Conditional): UNIX epoch time (miliseconds) instead of ISO datetime, required when updating a document; it can be used as the version of the composition.
+ *      - deactivated (Conditional): required when the storage object is disabled (before deleting).
+ *  Note: the deactivation date is the "updated" timestamp.
+ */
+export interface TxCompositionEncrypted {
+    "_deleted"?: boolean;
+    "_id": string;
+    "_rev"?: string;
+    index: IndexEncrypted;
+    jwe?: StandardJWE;
+    meta: TxCompositionMetadata;
 }
