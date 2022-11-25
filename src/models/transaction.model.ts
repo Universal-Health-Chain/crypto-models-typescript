@@ -75,11 +75,11 @@ export interface TxDIDCommPayloadBase {
 /** If the data is less than the chunk size, it is embedded directly into the content.
  *  Otherwise, the data is sharded into chunks by the client, and each chunk is encrypted and sent to the server.
  *  In this case, content contains a manifest-like listing of URIs to individual chunks (integrity-protected by [HASHLINK].
- *  Required fields are "created" and "compositionStatus".
+ *  Required fields are "created" and "status".
  *  - created (REQUIRED): UNIX epoch time (miliseconds) instead of ISO datetime, required when creating a document.
  *  - status (REQUIRED): valid status for the composition are "preliminary", "amended", "final" or "error" (FHIR specification).
  *  - contentType (Conditional): MIME type, required when data is sharded into chunks (e.g.: "didcomm-plain+json").
- *  - tags (Conditional): non-personal data, it is required when the content data is created. 
+ *  - tags (Conditional): non-personal data, it is required when the content data is created. The tags can be removed from the metadata and stored in the encrypted index.
  *  - sectionCode (Conditional): required code for a health section or document category in a personal wallet.
  *  - sectionSystem (Conditional): default is "http://loinc.org" (health section or health document category).
  *  - updated (Conditional): UNIX epoch time (miliseconds) instead of ISO datetime, required when updating a document; it can be used as the version of the composition.
@@ -88,24 +88,26 @@ export interface TxDIDCommPayloadBase {
  */
  export interface TxCompositionMetadata {
     // Encrypted Data Vaults (EDV) specification
-    contentType?: string; // the data can be sharded into chunks, it specifies the MIME type of the data.
+    contentType?:   string; // the data can be sharded into chunks, it specifies the MIME type of the data.
     
     // From UHC
-    compositionStatus:  string; // "preliminary", "amended", "final" or "error" (FHIR specification)
-    sectionCode?:       string; // health section or document category.
-    sectionSystem?:     string; // LOINC by default when it is not defined.
+    sectionCode?:   string; // health section or document category.
+    sectionSystem?: string; // LOINC by default when it is not defined.
+    status:         string; // "preliminary", "amended", "final" or "error" (FHIR specification)
 
     // From DidDocumentMetadata
     created:        number;     // UNIX epoch time (miliseconds) instead of ISO datetime.
     deactivated?:   boolean;    // note: the deactivation date is the "updated" timestamp.      
     updated?:       number;     // UNIX epoch time (miliseconds) instead of ISO datetime; it can be used as the version of the composition.
+    
+    // TODO: tags can be removed from the metadata and stored in the encrypted index.
     tags?:          string[];   // non-personal data is set as tags for each resource object, such as "department", "profile", "location", FHIR resource types, "SHC", "DGC", "COVID-19", etc.
 }
 
 /** Unencrypted composition data to be encrypted before being stored and sent to an external Encrypted Data Vault (EDV).
- *  When creating a draft, the required properties are: `_id`, `index` (`label` attribute), `meta.created`, `meta.compositionStatus`.
+ *  When creating a draft, the required properties are: `_id`, `index` (`title` attribute), `meta.created`, `meta.status`.
  * - the `content` property contains the unencrypted DIDComm payload (with additional "body", "body.data[]" and "body.data[].attributes" properties).
- * - the `index` property contains unencrypted indexed attributes, where the `label` attribute MUST exist.
+ * - the `index` property contains unencrypted indexed attributes, where the `title` attribute MUST exist.
  * - the `meta` property contains:
  *      - created (REQUIRED): UNIX epoch time (miliseconds) instead of ISO datetime, required when creating a document.
  *      - status (REQUIRED): valid status for the composition are "preliminary", "amended", "final" or "error" (FHIR specification).
@@ -123,14 +125,14 @@ export interface TxDIDCommPayloadBase {
     "_rev"?:        string;                 // PouchDB / CouchDB manages the version automatically.
     content?:       TxDIDCommPayloadBase;   // decrypted payload, it can be encrypted as the `jwe` element before being stored.
     index:          IndexDecrypted;         // decrypted indexed attributes, they SHALL be encrypted before being stored.
-    meta:           TxCompositionMetadata;  // "created" and "compositionStatus" are required
+    meta:           TxCompositionMetadata;  // "created" and "status" are required
 }
 
 /** Decrypted indexed attributes, they SHALL be encrypted before being stored.
- *  The `label` attribute MUST exist (old BiographyEntry.title)
+ *  The `title` attribute MUST exist (human readable title for the composition)
  */
 export interface IndexDecrypted {
-    attributes: IndexAttribute[]; // the `label` attribute MUST exist (old BiographyEntry.title) 
+    attributes: IndexAttribute[]; // the `title` attribute MUST exist.
 }
 
 /** Encrypted indexes can be created and used to perform efficient searching
@@ -144,21 +146,21 @@ export interface IndexAttribute {
 }
 
 /** Encrypted indexed attributes stored.
- *  The `label` attribute MUST exist (old BiographyEntry.title)
+ *  The `title` attribute MUST exist (human readable title for the composition)
  */
 export interface IndexEncrypted {
-    attributes: IndexAttribute[]; // the `label` attribute MUST exist (old BiographyEntry.title)
+    attributes: IndexAttribute[]; // the `title` attribute MUST exist.
     hmac: {
-        id: string; // e.g.: "did:ex:12345#key1",
-        type: string, // e.g.: "Sha256HmacKey2019"
+        id:     string; // e.g.: "did:ex:12345#key1",
+        type:   string; // e.g.: "Sha256HmacKey2019"
     },
     sequence: number;
 }
 
 /** Unencrypted composition data to be encrypted before being stored and sent to an external Encrypted Data Vault (EDV).
- *  When creating a draft, the required properties are: `_id`, `index` (`label` attribute), `meta.created`, `meta.compositionStatus`.
+ *  When creating a draft, the required properties are: `_id`, `index` (`title` attribute), `meta.created`, `meta.status`.
  * - the `content` property contains the unencrypted DIDComm payload (with additional "body", "body.data[]" and "body.data[].attributes" properties).
- * - the `index` property contains unencrypted indexed attributes, where the `label` attribute MUST exist.
+ * - the `index` property contains unencrypted indexed attributes, where the `title` attribute MUST exist.
  * - the `meta` property contains:
  *      - created (REQUIRED): UNIX epoch time (miliseconds) instead of ISO datetime, required when creating a document.
  *      - status (REQUIRED): valid status for the composition are "preliminary", "amended", "final" or "error" (FHIR specification).
@@ -176,5 +178,5 @@ export interface IndexEncrypted {
     "_rev"?:        string;                 // PouchDB / CouchDB manages the version automatically.
     index:          IndexEncrypted;         // encrypted indexed attributes, they SHALL be encrypted before being stored.
     jwe?:           StandardJWE;            // encrypted payload, it can be encrypted as the `jwe` element before being stored.
-    meta:           TxCompositionMetadata;  // "created" and "compositionStatus" are required
+    meta:           TxCompositionMetadata;  // "created" and "status" are required
 }

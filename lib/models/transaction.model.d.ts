@@ -64,11 +64,11 @@ export interface TxDIDCommPayloadFull extends TxDIDCommPayloadBase {
 /** If the data is less than the chunk size, it is embedded directly into the content.
  *  Otherwise, the data is sharded into chunks by the client, and each chunk is encrypted and sent to the server.
  *  In this case, content contains a manifest-like listing of URIs to individual chunks (integrity-protected by [HASHLINK].
- *  Required fields are "created" and "compositionStatus".
+ *  Required fields are "created" and "status".
  *  - created (REQUIRED): UNIX epoch time (miliseconds) instead of ISO datetime, required when creating a document.
  *  - status (REQUIRED): valid status for the composition are "preliminary", "amended", "final" or "error" (FHIR specification).
  *  - contentType (Conditional): MIME type, required when data is sharded into chunks (e.g.: "didcomm-plain+json").
- *  - tags (Conditional): non-personal data, it is required when the content data is created.
+ *  - tags (Conditional): non-personal data, it is required when the content data is created. The tags can be removed from the metadata and stored in the encrypted index.
  *  - sectionCode (Conditional): required code for a health section or document category in a personal wallet.
  *  - sectionSystem (Conditional): default is "http://loinc.org" (health section or health document category).
  *  - updated (Conditional): UNIX epoch time (miliseconds) instead of ISO datetime, required when updating a document; it can be used as the version of the composition.
@@ -77,18 +77,18 @@ export interface TxDIDCommPayloadFull extends TxDIDCommPayloadBase {
  */
 export interface TxCompositionMetadata {
     contentType?: string;
-    compositionStatus: string;
     sectionCode?: string;
     sectionSystem?: string;
+    status: string;
     created: number;
     deactivated?: boolean;
     updated?: number;
     tags?: string[];
 }
 /** Unencrypted composition data to be encrypted before being stored and sent to an external Encrypted Data Vault (EDV).
- *  When creating a draft, the required properties are: `_id`, `index` (`label` attribute), `meta.created`, `meta.compositionStatus`.
+ *  When creating a draft, the required properties are: `_id`, `index` (`title` attribute), `meta.created`, `meta.status`.
  * - the `content` property contains the unencrypted DIDComm payload (with additional "body", "body.data[]" and "body.data[].attributes" properties).
- * - the `index` property contains unencrypted indexed attributes, where the `label` attribute MUST exist.
+ * - the `index` property contains unencrypted indexed attributes, where the `title` attribute MUST exist.
  * - the `meta` property contains:
  *      - created (REQUIRED): UNIX epoch time (miliseconds) instead of ISO datetime, required when creating a document.
  *      - status (REQUIRED): valid status for the composition are "preliminary", "amended", "final" or "error" (FHIR specification).
@@ -109,7 +109,7 @@ export interface TxCompositionBase {
     meta: TxCompositionMetadata;
 }
 /** Decrypted indexed attributes, they SHALL be encrypted before being stored.
- *  The `label` attribute MUST exist (old BiographyEntry.title)
+ *  The `title` attribute MUST exist (human readable title for the composition)
  */
 export interface IndexDecrypted {
     attributes: IndexAttribute[];
@@ -124,7 +124,7 @@ export interface IndexAttribute {
     unique?: boolean;
 }
 /** Encrypted indexed attributes stored.
- *  The `label` attribute MUST exist (old BiographyEntry.title)
+ *  The `title` attribute MUST exist (human readable title for the composition)
  */
 export interface IndexEncrypted {
     attributes: IndexAttribute[];
@@ -135,9 +135,9 @@ export interface IndexEncrypted {
     sequence: number;
 }
 /** Unencrypted composition data to be encrypted before being stored and sent to an external Encrypted Data Vault (EDV).
- *  When creating a draft, the required properties are: `_id`, `index` (`label` attribute), `meta.created`, `meta.compositionStatus`.
+ *  When creating a draft, the required properties are: `_id`, `index` (`title` attribute), `meta.created`, `meta.status`.
  * - the `content` property contains the unencrypted DIDComm payload (with additional "body", "body.data[]" and "body.data[].attributes" properties).
- * - the `index` property contains unencrypted indexed attributes, where the `label` attribute MUST exist.
+ * - the `index` property contains unencrypted indexed attributes, where the `title` attribute MUST exist.
  * - the `meta` property contains:
  *      - created (REQUIRED): UNIX epoch time (miliseconds) instead of ISO datetime, required when creating a document.
  *      - status (REQUIRED): valid status for the composition are "preliminary", "amended", "final" or "error" (FHIR specification).
