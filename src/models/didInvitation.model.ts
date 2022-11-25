@@ -64,6 +64,6 @@ export interface InvitationService extends
    id:               string;   // "#inline",
    recipientKeys?:   string[]; // e.g.: ["did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH"],
    routingKeys?:     string[];
-   serviceEndpoint:  string;   // e.g.: "https://example.com:5000/ssi"
+   serviceEndpoint:  string | object;   // e.g.: "https://example.com:5000/ssi"
    type:             string;   // "did-communication",
 }

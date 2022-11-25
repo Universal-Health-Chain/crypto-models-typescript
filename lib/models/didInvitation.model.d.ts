@@ -52,6 +52,6 @@ export interface InvitationService extends DidDocumentService {
     id: string;
     recipientKeys?: string[];
     routingKeys?: string[];
-    serviceEndpoint: string;
+    serviceEndpoint: string | object;
     type: string;
 }
