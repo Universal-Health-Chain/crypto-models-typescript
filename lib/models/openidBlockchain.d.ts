@@ -120,8 +120,8 @@ export interface VerifierDLT {
  *  Note: number can be used as an alias for 'document_number' for backward compatibilty purposes but will be deprecated in future releases, implementers are recommended to use document_number.
  */
 export interface DocumentDetailsBase {
-    date_of_expiry: string;
-    date_of_issuance: string;
+    date_of_expiry?: string;
+    date_of_issuance?: string;
     document_number?: string;
     serial_number?: string;
     type: string;
@@ -208,7 +208,7 @@ export interface IssuerElectronicRecordDLT extends IssuerElectronicRecordBase {
 }
 /** It may include all elements of the OpenID Connect address Claim. */
 export interface IssuerElectronicRecordOpenID extends IssuerElectronicRecordBase {
-    name: string;
+    name?: string;
     formatted?: string;
     street_address?: string;
     locality?: string;

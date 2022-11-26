@@ -89,7 +89,7 @@ export interface DIDCommAttachmentContent extends
 /**
  * id: it should be brief and MUST consist entirely of unreserved URI characters
  * description: a human-readable description of the content.
- * filename: a hint about the name that might be used if this attachment is persisted as a file. If this field is present and media_type is not, the extension on the filename may be used to infer a MIME type.
+ * filename: do not use it for OpenID Identity Assurance (it alredy has the "desc" field for each piece of evidence); if this field is present and media_type is not, the extension on the filename may be used to infer a MIME type.
  * media_type: describes the media type of the attached content.
  * format: further describes the format of the attachment if the media_type is not sufficient.
  * lastmod_time: a hint about when the content in this attachment was last modified.
@@ -99,7 +99,7 @@ export interface DIDCommAttachmentContent extends
 export interface DIDCommAttachment{
     id?:            string; // it should be brief and MUST consist entirely of unreserved URI characters
     description?:   string; // [optional] A human-readable description of the content.
-    filename?:      string; // A hint about the name that might be used if this attachment is persisted as a file. If this field is present and media_type is not, the extension on the filename may be used to infer a MIME type.
+    filename?:      string; // do not use it for OpenID Identity Assurance (it alredy has the "desc" field for each piece of evidence); if this field is present and media_type is not, the extension on the filename may be used to infer a MIME type.
     media_type?:    string; // Describes the media type of the attached content.
     format?:        string; // Further describes the format of the attachment if the media_type is not sufficient.
     lastmod_time?:  string; // A hint about when the content in this attachment was last modified.

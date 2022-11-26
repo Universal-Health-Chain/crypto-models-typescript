@@ -104,7 +104,7 @@ export interface EvidenceDocumentOpenID extends
     CommonSubElementOpenID  // method, time
 {
     type:               'document';             // REQUIRED. Value MUST be set to 'document'. Note: id_document is an alias for document for backward compatibilty purposes but will be deprecated in future releases, implementers are recommended to use document.
-    attachments?:       any[];                  // OPTIONAL. Array of JSON objects representing attachments like photocopies of documents or certificates.
+    attachments?:       ContentAttachedOpenID[];// OPTIONAL. Array of JSON objects representing attachments like photocopies of documents or certificates.
     check_details?:     EvidenceCheckData[];    // JSON array representing the checks done in relation to the evidence.
     verifier?:          VerifierDLT;            // OPTIONAL. A JSON object denoting the legal entity that performed the identity verification on behalf of the OP.
     document_details?:  DocumentDetailsOpenID;  // OPTIONAL. Object representing the id document used to perform the identity verification.
@@ -155,7 +155,7 @@ export interface DocumentDetailsOpenID extends
 export interface IssuerOpenID extends
     ClaimAddressOpenID // Include all elements of the OpenID Connect address Claim ([OpenID])
 {
-    name:               string; // REQUIRED. Designation of the issuer of the document
+    name?:              string; // OPTIONAL. Designation of the issuer of the document
     country_code?:      string; // OPTIONAL. String denoting the country or supranational organization that issued the document as ISO 3166/ICAO 3-letter codes [ICAO-Doc9303]
     jurisdiction?:      string; // OPTIONAL. String containing the name of the region(s)/state(s)/province(s)/municipality(ies) that issuer has jurisdiction over (if this information is not common knowledge or derivable from the address).
 }

@@ -148,8 +148,8 @@ export interface VerifierDLT {
  *  Note: number can be used as an alias for 'document_number' for backward compatibilty purposes but will be deprecated in future releases, implementers are recommended to use document_number.
  */
  export interface DocumentDetailsBase {
-    date_of_expiry:     string;     // REQUIRED. If this attribute exists for the particular type of document. The date the document will expire as ISO 8601:2004 YYYY-MM-DD format.
-    date_of_issuance:   string;     // REQUIRED. If this attribute exists for the particular type of document. The date the document was issued as ISO 8601:2004 YYYY-MM-DD format.
+    date_of_expiry?:    string;     // OPTIONAL. If this attribute exists for the particular type of document. The date the document will expire as ISO 8601:2004 YYYY-MM-DD format.
+    date_of_issuance?:  string;     // OPTIONAL. If this attribute exists for the particular type of document. The date the document was issued as ISO 8601:2004 YYYY-MM-DD format.
     document_number?:   string;     // OPTIONAL. Unique document ID that was issued to the End-User. This is used on one document and will change if it is reissued, e.g., a passport number, certificate number, etc. Note: number can be used as an alias for 'document_number' for backward compatibilty purposes but will be deprecated in future releases, implementers are recommended to use document_number.
     serial_number?:     string;     // OPTIONAL. Model of document irrespective of any personalization information (usually physical artefacts and is present before personalization).
     type:               string;     // REQUIRED. Standardized values are defined in the Identity Documents section. The OP MAY use other than the predefined values in which case the RPs will either be unable to process the assertion, just store this value for audit purposes, or apply bespoken business logic to it.
@@ -258,7 +258,7 @@ export interface IssuerElectronicRecordDLT extends
 export interface IssuerElectronicRecordOpenID extends
     IssuerElectronicRecordBase
 {
-    name:               string; // instead of blockchain's id and type.
+    name?:              string; // instead of blockchain's id and type.
     formatted?:         string; // Full mailing address.
     street_address?:    string; // MAY include house number, street name, Post Office Box, and multi-line extended street address information. This field MAY contain multiple lines, separated by newlines. Newlines can be represented either as a carriage return/line feed pair ("\r\n") or as a single line feed character ("\n")
     locality?:          string; // City or locality component.

@@ -81,7 +81,7 @@ export declare type EvidenceObjectOpenID = EvidenceElectronicRecordOpenID | Evid
  */
 export interface EvidenceDocumentOpenID extends CommonSubElementOpenID {
     type: 'document';
-    attachments?: any[];
+    attachments?: ContentAttachedOpenID[];
     check_details?: EvidenceCheckData[];
     verifier?: VerifierDLT;
     document_details?: DocumentDetailsOpenID;
@@ -120,7 +120,7 @@ export interface DocumentDetailsOpenID extends DocumentDetailsBase {
     personal_number?: string;
 }
 export interface IssuerOpenID extends ClaimAddressOpenID {
-    name: string;
+    name?: string;
     country_code?: string;
     jurisdiction?: string;
 }
