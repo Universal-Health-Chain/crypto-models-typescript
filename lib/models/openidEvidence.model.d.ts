@@ -17,14 +17,14 @@ import { DigestResultOpenIdData } from "./Proof.model";
  * uripp 	https://openid.net/verification_method/uripp 	Unsupervised remote in-person proofing with video capture of the ID document, user self-portrait video and liveness checks.
  * onsite 	https://openid.net/verification_method/onsite 	Electronically onsite reading the document’s chip using an authorization certificate and card access number.
  */
-export declare enum TypeVerificationMethod {
+export declare enum OpenidVerificationMethod {
     PhysicalInPerson = "pipp",
     SupervisedRemoteInPerson = "sripp",
     OnlineElectronicID = "eid",
     UnsupervisedRemoteInPerson = "uripp",
     ElectronicallyOnsite = "onsite"
 }
-export declare enum TypePhysicalDocument {
+export declare enum OpenidPhysicalDocument {
     IDcard = "idcard",
     Passport = "passport",
     DrivingLicense = "driving_permit",
@@ -37,7 +37,7 @@ export declare enum TypePhysicalDocument {
     Visa = "visa",
     MilitaryID = "military_id"
 }
-export declare enum CheckMethod {
+export declare enum OpenidCheckMethod {
     vpip = "vpip",
     vpiruv = "vpiruv",
     vri = "vri",

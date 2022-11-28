@@ -25,7 +25,7 @@ import { DigestResultOpenIdData } from "./Proof.model";
  * uripp 	https://openid.net/verification_method/uripp 	Unsupervised remote in-person proofing with video capture of the ID document, user self-portrait video and liveness checks.
  * onsite 	https://openid.net/verification_method/onsite 	Electronically onsite reading the document’s chip using an authorization certificate and card access number.
  */
-export enum TypeVerificationMethod {
+export enum OpenidVerificationMethod {
     PhysicalInPerson = "pipp", // 	https://openid.net/verification_method/pipp 	Physical In-Person Proofing.
     SupervisedRemoteInPerson = "sripp", //  	https://openid.net/verification_method/sripp 	Supervised remote In-Person Proofing.
     OnlineElectronicID = "eid",	// https://openid.net/verification_method/eid 	Online verification of an electronic ID card.
@@ -33,7 +33,7 @@ export enum TypeVerificationMethod {
     ElectronicallyOnsite = "onsite" // 	https://openid.net/verification_method/onsite 	Electronically onsite reading the document’s chip using an authorization certificate and card access number.    
 }
 
-export enum TypePhysicalDocument {
+export enum OpenidPhysicalDocument {
     IDcard = "idcard", // 	https://openid.net/document/idcard 	An identity document issued by a country's government for the purpose of identifying a citizen.
     Passport= "passport", // 	https://openid.net/document/passport 	A passport is a travel document, usually issued by a country's government, that certifies the identity and nationality of its holder primarily for the purpose of international travel. (see OxfordPassport).
     DrivingLicense = "driving_permit", // 	https://openid.net/document/driving_permit 	Official document permitting an individual to operate motorized vehicles. In the absence of a formal identity document, a driver's license may be accepted in many countries for identity verification.
@@ -47,7 +47,7 @@ export enum TypePhysicalDocument {
     MilitaryID = "military_id" // 	https://openid.net/document/military_id 	An official military identity document issued by a country's government to its service personnel.
 }
 
-export enum CheckMethod {
+export enum OpenidCheckMethod {
     vpip = "vpip", // 	https://openid.net/validation_method/vpip 	Validation that physical evidence is genuine through inspection of its physical properties in person.
     vpiruv = "vpiruv", // 	https://openid.net/validation_method/vpiruv 	Validation that physical evidence is genuine through inspection of its physical properties in person including its optical characteristics under non-visible light.
     vri = "vri", // 	https://openid.net/validation_method/vri 	Validation that physical evidence is genuine through the inspection of an image taken remotely under visible light.
