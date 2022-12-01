@@ -33,14 +33,14 @@ export enum OpenidVerificationMethod {
     ElectronicallyOnsite = "onsite" // 	https://openid.net/verification_method/onsite 	Electronically onsite reading the document’s chip using an authorization certificate and card access number.    
 }
 
-export enum OpenidPhysicalDocument {
+export enum OpenidPersonalPhysicalDocument {
     IDcard = "idcard", // 	https://openid.net/document/idcard 	An identity document issued by a country's government for the purpose of identifying a citizen.
     Passport= "passport", // 	https://openid.net/document/passport 	A passport is a travel document, usually issued by a country's government, that certifies the identity and nationality of its holder primarily for the purpose of international travel. (see OxfordPassport).
     DrivingLicense = "driving_permit", // 	https://openid.net/document/driving_permit 	Official document permitting an individual to operate motorized vehicles. In the absence of a formal identity document, a driver's license may be accepted in many countries for identity verification.
     ResidencePermit= "residence_permit", // 	https://openid.net/document/residence_permit 	Official document permitting an individual to reside within a particular jurisdiction.
     TaxStatement= "tax_statement", // 	https://openid.net/document/tax_statement 	Statement from a country's tax authority.
     SocialSecurityStatement= "social_security_statement", // 	https://openid.net/document/social_security_statement 	Statement from a country's social security authority.
-    BanSstatement= "bank_statement", // 	https://openid.net/document/bank_statement 	Bank statement from a recognized banking institution.
+    BankStatement= "bank_statement", // 	https://openid.net/document/bank_statement 	Bank statement from a recognized banking institution.
     UtilityStatement= "utility_statement", // 	https://openid.net/document/utility_statement 	Statement from a recognized utility provider.    
     EducationCertificate= "education_certificate", // 	https://openid.net/document/education_certificate 	Document certifying that a person has received specific education or has passed a test or series of tests.
     Visa= "visa", // 	https://openid.net/document/visa 	Document that grants the holder official permission to enter, leave or stay in a country.
@@ -333,6 +333,7 @@ education_certificate 	https://openid.net/document/education_certificate 	Docume
 visa 	https://openid.net/document/visa 	Document that grants the holder official permission to enter, leave or stay in a country.
 military_id 	https://openid.net/document/military_id 	An official military identity document issued by a country's government to its service personnel.
 voter_id 	https://openid.net/document/voter_id 	An official voter identity document.
+
 Electronic records
 Identifier 	URI 	Definition
 birth_register 	https://openid.net/record/birth_register 	A record from an official register of births.

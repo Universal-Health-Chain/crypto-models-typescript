@@ -24,14 +24,14 @@ export declare enum OpenidVerificationMethod {
     UnsupervisedRemoteInPerson = "uripp",
     ElectronicallyOnsite = "onsite"
 }
-export declare enum OpenidPhysicalDocument {
+export declare enum OpenidPersonalPhysicalDocument {
     IDcard = "idcard",
     Passport = "passport",
     DrivingLicense = "driving_permit",
     ResidencePermit = "residence_permit",
     TaxStatement = "tax_statement",
     SocialSecurityStatement = "social_security_statement",
-    BanSstatement = "bank_statement",
+    BankStatement = "bank_statement",
     UtilityStatement = "utility_statement",
     EducationCertificate = "education_certificate",
     Visa = "visa",
@@ -266,6 +266,7 @@ education_certificate 	https://openid.net/document/education_certificate 	Docume
 visa 	https://openid.net/document/visa 	Document that grants the holder official permission to enter, leave or stay in a country.
 military_id 	https://openid.net/document/military_id 	An official military identity document issued by a country's government to its service personnel.
 voter_id 	https://openid.net/document/voter_id 	An official voter identity document.
+
 Electronic records
 Identifier 	URI 	Definition
 birth_register 	https://openid.net/record/birth_register 	A record from an official register of births.
