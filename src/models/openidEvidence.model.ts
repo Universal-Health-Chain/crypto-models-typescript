@@ -4,7 +4,7 @@
 import { EvidenceVerificationCommon, EvidenceCheckData, VerifierDLT, AttachmentExternalDLT, DocumentDetailsBase,
     EvidenceElectronicRecordBase, ElectronicRecordBase, EvidenceVouchBase,
     VoucherAttestationBase, VoucherIssuerDLT, EvidenceBillBase, EvidenceElectronicSignatureBase
-} from "./openidBlockchain";
+} from "./openidBlockchain.model";
 import { ClaimAddressOpenID, ClaimsFullOpenID } from "./openidClaims.model";
 import { DigestResultOpenIdData } from "./Proof.model";
 

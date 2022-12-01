@@ -1,4 +1,4 @@
-import { EvidenceVerificationCommon, EvidenceCheckData, VerifierDLT, AttachmentExternalDLT, DocumentDetailsBase, EvidenceElectronicRecordBase, ElectronicRecordBase, EvidenceVouchBase, VoucherAttestationBase, VoucherIssuerDLT, EvidenceBillBase, EvidenceElectronicSignatureBase } from "./openidBlockchain";
+import { EvidenceVerificationCommon, EvidenceCheckData, VerifierDLT, AttachmentExternalDLT, DocumentDetailsBase, EvidenceElectronicRecordBase, ElectronicRecordBase, EvidenceVouchBase, VoucherAttestationBase, VoucherIssuerDLT, EvidenceBillBase, EvidenceElectronicSignatureBase } from "./openidBlockchain.model";
 import { ClaimAddressOpenID, ClaimsFullOpenID } from "./openidClaims.model";
 import { DigestResultOpenIdData } from "./Proof.model";
 /** Evidence is the certification of the authenticity of some (physical) document, (electronic) record, (electronic) signature, (utility) bill or vouch.

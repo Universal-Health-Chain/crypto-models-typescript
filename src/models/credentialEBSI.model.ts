@@ -3,7 +3,7 @@
 
 import { TypedId } from "./credentialCommon.model";
 import { ProofEBSIv2 } from "./Proof.model";
-import { EvidenceW3C } from "./openidBlockchain"
+import { EvidenceW3C } from "./openidBlockchain.model"
 
 /** CredentialEBSI uses EBSI proofs (JWS) and both W3C Credential v1 and v2 'iat', 'nbf' and 'exp'
  *  see https://www.w3.org/TR/vc-data-model/
