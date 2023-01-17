@@ -1,6 +1,8 @@
 /* Copyright 2022 ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
 /* Apache License 2.0 */
 
+import { VerificationEvidencesOpenID } from "./openidEvidence.model";
+
 /** Digest object represents a cryptographic hash of some bytes (e.g.: the content of a document).
  *  It has 'alg' and 'value' (Base64 encoded, not hexadecimal such as in W3C format).
  */
@@ -203,3 +205,5 @@ export interface ProofSignatureOnDLT extends
     // signature:  SignatureVerifiableDataOnDLT;
     digest?:    DigestResultOpenIdData;  // digest of the signature value ('proofValue' property in the W3C standard)
 }
+
+

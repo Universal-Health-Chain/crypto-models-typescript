@@ -1,20 +1,11 @@
+import { CommonDataAPI } from "./api.model";
 import { MetaFhirOnDLT } from "./fhirBlockchain.model";
 import { StandardJWE } from "./jwe.model";
 import { EvidenceVerificationOnDLT } from "./openidBlockchain.model";
+import { VerificationEvidencesOpenID } from "./openidEvidence.model";
 import { ProofCertificationBasic } from "./Proof.model";
 /** Both OpenID 'country_code' and FHIR country code for National Identity Documents ('NNxxx') use ISO 3166/ICAO 3-letter codes [ICAO-Doc9303] */
 export declare const CountryAlpha3ISO: string;
-/** NOTES:
- * The summary of codes is added by the API when reading a resource (instead of duplicating data on blockchain).
- * Metadata provides technical and workflow context to the resource.
- * The 'source' property is overwritted with the performer practitionerRoleId by the smart contract.
- * (instead of removing 'source' and creating another 'performer' property).
- */
-/** JSON-API common data */
-export interface CommonDataAPI {
-    id?: string;
-    type?: any;
-}
 /** canonicalization algorithm used for generating the digest values */
 export interface CanonicalData {
     alg: string;
@@ -23,6 +14,14 @@ export interface CanonicalData {
 export interface GenericMinData {
     fhir?: GenericMinFhirDLT;
     omop?: object;
+}
+/** Only research is allowed for blockchain:
+ *  - 'research': FHIR and/or OMOP
+ *
+ *  NOTE: OMOP is the Observational Medical Outcomes Partnership (OMOP) Common Data Model (OMOP CDM), now in its version 6.0.
+ */
+export interface RenderedDataOnDLT {
+    research?: GenericMinDataOnDLT;
 }
 /** Only (twin) 'research' data is allowed for blockchain notarization
  *  (SC will do the anomymization and de-identification of the data)
@@ -261,4 +260,48 @@ export interface ResearchMetadataOnDLT extends MetadataGeographicOnDLT {
 export interface MetadataGeographicOnDLT {
     country?: typeof CountryAlpha3ISO;
     state?: string;
+}
+/**
+ *  - status: HL7 status (other is possible)
+ *  - events: data for traceability, additional to the HL7 'status' data.
+ *  - claims: child claims from the parent JSON data.
+ *  - digest: digest data of the parent's JSON data 'attributes' (parent's 'attributes.identifier.did' SHALL exist for entrophy)
+ *  - signatures: they can be converted for both W3C Proof and FHIR Provenance / Signature
+ *  and it contains all the W3C Proof properties plus addition digest of the signature (if the signature data is not stored on blockchain)
+ *  - notarization: credential, DGC, FHIR, OMOP, openEHR, and/or SHC.
+ *  - participants: creatorId, holderId, issuerId, subjectId, subjectJwk, writerId, writerType.
+ *  - openId: 'trust_framework', 'assurance_level', 'assurance_process', 'time', 'verification_process', 'evidence': array of OpenID evidences, following the OpenID standard (evidence instead of evidences)
+ *  - trace: channel, txn, txTime
+ *
+ *  NOTE: evidences are added later when extending it (e.g.: physical document verification)
+ */
+export interface VerificationEHR extends ProofCertificationBasic {
+    status?: string;
+    notarization?: VerificationEHR;
+    participants?: ParticipantsCertification;
+    openId?: VerificationEvidencesOpenID;
+    trace?: TraceOnDLT;
+}
+/** It contains:
+ *  - 'id' (the resource ID) and 'type' (e.g.: 'Observation'): not stored on blockchain.
+ *  - 'record.fhir': the original FHIR resource provided in the input.
+ *  - 'record.shc': optional SMART Health Card.
+ *  - 'record.vc': optional Verifiable Credential.
+ *  - 'twin': to know if its digital twin was already anonymized and stored for research.
+ *  - 'verification' element with:
+ *      - 'evidence': array of OpenID evidences, following the OpenID standard (evidence instead of evidences).
+ *      - 'trust_framework', 'assurance_level', 'assurance_process', 'time', 'verification_process' (OpenID properties).
+ *      - 'canAlg', 'holder', 'issuerOrg', 'typeHL7', 'time' and 'writerDID' or 'writer' (with id and type).
+ *  - 'meta'
+ *      - 'fhir': versionId, lastUpdated, security, source (replaced with the writerId by the blockchain).
+ *      - 'research': country, state, among others.
+ *      - 'permissions': only for PractitonerRole.
+ *
+ *  NOTE: It does not include 'relationships': issuerOrgDID, performerId, performerType, holderId, subjectId are in the attributes.
+ */
+export interface CertificationDataOutput extends CommonDataAPI {
+    twin: boolean;
+    meta: MetadataFullOnDLT;
+    verification?: VerificationEHR;
+    record?: any;
 }
