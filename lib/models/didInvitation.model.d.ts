@@ -13,6 +13,7 @@ import { DidDocumentService } from "./didDocument.model";
  * and shares its UniversalID and the public encryption key ID (KID) by sending the DID document to Inviter.
  */
 export declare const ProtocolVersionOOBv2 = "2.0";
+/** "https://didcomm.org/out-of-band/2.0/invitation" */
 export declare const TypeDIDCommOutOfBandv2: string;
 /** Out-of-band (OOB) goal codes */
 export declare enum GoalCodeOOB {

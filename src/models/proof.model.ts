@@ -168,3 +168,38 @@ export interface AttachedSignatureDLT {
   content:        string; // bytes encoded in Base64
 }
 
+/** It defines some extensions as proof:
+ *  - claims: child claims from the parent JSON data.
+ *  - digest: digest data of the parent JSON data.
+ *  - signatures: they can be converted for both W3C Proof and FHIR Provenance / Signature
+ *  and it contains all the W3C Proof properties plus addition digest of the signature (if the signature data is not stored on blockchain)
+ *
+ *  NOTE: evidences are added later when extending it (e.g.: physical document verification)
+ */
+export interface ProofCertificationBasic {
+    
+  claims?:    ProofClaimElementOnDLT[];   // child claims from the parent JSON data, but without 'id' or 'value' data
+  digest?:    DigestResultOpenIdData;   // digest data of the parent JSON data.
+  signatures?:ProofSignatureOnDLT[];      // They can be converted for both W3C Proof and FHIR Provenance / Signature
+}
+
+/** It cannot contain neither the 'id' nor the 'value' of the claim stored on the blockchain.
+ *  It is limited to:
+ *  - digest: it is calculated by creating a sorted object with both 'id' and the element's name as key along with 'value' content as data, e.g.: {effectiveDateTime: value, id: "uuidv4"}
+ *  - element: the parent element name, e.g.: effectiveDateTime
+ *  - name: FHIR param name or claim name, e.g.: 'date' or 'date-yy'
+ */
+export interface ProofClaimElementOnDLT {
+  digest:     DigestResultOpenIdData;   // the digest is calculated by creating a sorted object with both 'id' and the element's name as key along with 'value' content as data, e.g.: {effectiveDateTime: value, id: "uuidv4"}
+  element?:   string;                     // the parent element name, e.g.: effectiveDateTime
+  name?:      string;                     // FHIR param name or claim name, e.g.: 'date' or 'date-yy'
+}
+
+/** It contains all the W3C Proof properties plus addition digest of the signature (if the signature data is not stored on blockchain) */
+export interface ProofSignatureOnDLT extends
+    // ClaimSignatureProofOnDLT // It does not contain the signature value but the signature's digest value
+    ProofFullW3C
+{
+    // signature:  SignatureVerifiableDataOnDLT;
+    digest?:    DigestResultOpenIdData;  // digest of the signature value ('proofValue' property in the W3C standard)
+}

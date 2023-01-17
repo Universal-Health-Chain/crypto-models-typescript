@@ -19,6 +19,8 @@ import { DidDocumentService } from "./didDocument.model";
  */
 
  export const ProtocolVersionOOBv2 = "2.0"
+ 
+ /** "https://didcomm.org/out-of-band/2.0/invitation" */
  export const TypeDIDCommOutOfBandv2 = "https://didcomm.org/out-of-band/" + ProtocolVersionOOBv2 + "/invitation"
 
  /** Out-of-band (OOB) goal codes */

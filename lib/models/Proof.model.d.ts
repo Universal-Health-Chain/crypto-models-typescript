@@ -119,3 +119,31 @@ export interface AttachedSignatureDLT {
     content_type: string;
     content: string;
 }
+/** It defines some extensions as proof:
+ *  - claims: child claims from the parent JSON data.
+ *  - digest: digest data of the parent JSON data.
+ *  - signatures: they can be converted for both W3C Proof and FHIR Provenance / Signature
+ *  and it contains all the W3C Proof properties plus addition digest of the signature (if the signature data is not stored on blockchain)
+ *
+ *  NOTE: evidences are added later when extending it (e.g.: physical document verification)
+ */
+export interface ProofCertificationBasic {
+    claims?: ProofClaimElementOnDLT[];
+    digest?: DigestResultOpenIdData;
+    signatures?: ProofSignatureOnDLT[];
+}
+/** It cannot contain neither the 'id' nor the 'value' of the claim stored on the blockchain.
+ *  It is limited to:
+ *  - digest: it is calculated by creating a sorted object with both 'id' and the element's name as key along with 'value' content as data, e.g.: {effectiveDateTime: value, id: "uuidv4"}
+ *  - element: the parent element name, e.g.: effectiveDateTime
+ *  - name: FHIR param name or claim name, e.g.: 'date' or 'date-yy'
+ */
+export interface ProofClaimElementOnDLT {
+    digest: DigestResultOpenIdData;
+    element?: string;
+    name?: string;
+}
+/** It contains all the W3C Proof properties plus addition digest of the signature (if the signature data is not stored on blockchain) */
+export interface ProofSignatureOnDLT extends ProofFullW3C {
+    digest?: DigestResultOpenIdData;
+}

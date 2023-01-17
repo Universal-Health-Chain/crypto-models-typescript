@@ -2,7 +2,7 @@
  *  UHC uses the HL7 "identifierType" coding system but with reverse-dns (same as ISO)
  *  instead of using the OpenID physical document types.
  */
-export declare enum IdentifierKind {
+export declare enum IdKind {
     MobileDriverLicense = "org.iso.18013.5.1.mDL",
     PersonalDriverLicense = "org.hl7.terminology.codesystem.v2-0203.DL",
     PersonalCitizenshipCard = "org.hl7.terminology.codesystem.v2-0203.CZ",
@@ -27,7 +27,9 @@ export declare enum IdentifierKind {
     ResourceDeptHealthcare = "org.hl7.terminology.codesystem.service-type",
     ResourceDept = "system",
     OccupationRole = "org.ilo.isco.isco08",
-    TrainingClassification = "org.unesco.uis.isced"
+    TrainingClassification = "org.unesco.uis.isced",
+    MedicalCodeSNOMED = "info.snomed.sct",
+    MedicalCodeLOINC = "org.loinc"
 }
 export declare enum EducationKind {
 }

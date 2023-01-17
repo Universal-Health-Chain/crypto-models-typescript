@@ -5,11 +5,13 @@
  *  UHC uses the HL7 "identifierType" coding system but with reverse-dns (same as ISO)
  *  instead of using the OpenID physical document types.
  */
-export enum IdentifierKind {
+export enum IdKind {
 	// from ISO
 	MobileDriverLicense = "org.iso.18013.5.1.mDL", // https://www.iso.org/standard/69084.html
 
-	// from http://terminology.hl7.org/CodeSystem/v2-0203
+    // From HL7 http://terminology.hl7.org/CodeSystem/v2-0203)
+
+    // Personal identity documents (credentials and types of proofs)
 	PersonalDriverLicense   = "org.hl7.terminology.codesystem.v2-0203.DL",
 	PersonalCitizenshipCard = "org.hl7.terminology.codesystem.v2-0203.CZ",
 	PersonalNationalNumber  = "org.hl7.terminology.codesystem.v2-0203.NN",
@@ -18,7 +20,8 @@ export enum IdentifierKind {
 	LocalDonorRecord        = "org.hl7.terminology.codesystem.v2-0203.DR",
 	LocalPatientIdentifier  = "org.hl7.terminology.codesystem.v2-0203.PI",
 
-    // Professional identifiers
+    // Professional identity documents (credentials and types of proofs): e.g.: licensed or not.
+    // (not for client_id nor for professional qualifications).
 	ProfessionalDentistLicenseNumber = "org.hl7.terminology.codesystem.v2-0203.DDS",
     ProfessionalDoctorOfMedicine = "org.hl7.terminology.codesystem.v2-0203.MD", // licensed Doctor of Medicine (medical degree) in some medical specialty.
     ProfessionalDoctorOfOsteopathy = "org.hl7.terminology.codesystem.v2-0203.DO", //  licensed doctor (medical degree) focused on treating the whole person, with special training in the connection between the body's nerves, muscles, and bones. Can prescribe drugs and perform surgical operations.
@@ -36,16 +39,24 @@ export enum IdentifierKind {
     // Laboratory
     ProfessionalLaboratoryAccessionNumber = "org.hl7.terminology.codesystem.v2-0203.LACSN",
 	
-    // Resources
-    // Healthcare service (department) from HL7
+    // HL7 based: Healthcare service (department) resource type
 	ResourceDeptHealthcare = "org.hl7.terminology.codesystem.service-type", // https://www.hl7.org/fhir/codesystem-service-type.html
-	// from UHC
+	
+    // From UHC: system's non-healthcare department type
 	ResourceDept = "system", // internal coding system (HR, ICT, EXEC)
 
-    // from ILO
+    // ILO: occupation / role identifier type
     OccupationRole = "org.ilo.isco.isco08", // https://www.ilo.org/public/english/bureau/stat/isco/isco08/
 
-    TrainingClassification  = "org.unesco.uis.isced"
+    // ISCED (from UNESCO): classification of qualification type (it is not a professional identifier)
+    TrainingClassification  = "org.unesco.uis.isced",
+
+    // SNOMED
+    MedicalCodeSNOMED      = "info.snomed.sct", // http://snomed.info/sct
+
+    // LOINC
+    MedicalCodeLOINC      = "org.loinc", // http://loinc.org
+
 }
 
 export enum EducationKind {
