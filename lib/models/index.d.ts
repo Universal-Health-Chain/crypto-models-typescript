@@ -23,3 +23,5 @@ export * from "./profile.model";
 export * from "./proof.model";
 export * from "./resource-object.model";
 export * from "./transaction.model";
+export * from "./api.model";
+export * from "./fhirBlockchain.model";
