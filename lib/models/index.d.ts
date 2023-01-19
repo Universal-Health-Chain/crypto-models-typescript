@@ -1,4 +1,5 @@
 export * from "./aes.model";
+export * from "./asset.model";
 export * from "./cose.model";
 export * from "./credentialCommon.model";
 export * from "./credentialEBSI.model";
