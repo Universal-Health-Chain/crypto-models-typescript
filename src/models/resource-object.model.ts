@@ -1,6 +1,7 @@
 /* Copyright (c) ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
 /* Apache License 2.0 */
 
+import { DidData } from "./did.model";
 import { DIDCommAttachment } from "./didComm.model";
 import { DidDocument } from "./didDocument.model";
 
@@ -65,4 +66,14 @@ export interface ParticipantsIdentity {
 
     // authorized recipients by the subject or holder (e.g.: patient or legal guardians)
     recipients?:    DidDocument[];// DID of legal guardians, caregivers, etc.
+}
+
+export interface  ResourceObjectWithDidData extends ResourceObjectBase {
+    attachments?:   DIDCommAttachment[];    // credentials or evidences
+    attributes?:    any;                    // JSON data
+    id?:            string;                 // it can be used by the smart-contracts for pseudo-anonymization
+    didData?:       DidData;                // DID resolution data and DID metadata
+    meta?:          ResourceMetadata;       // e.g.: created timestamp (it can be different on the frontend app and in the backend service)
+    relationships?: ResourceRelationships;  // e.g.: author (client_id)
+    type?:          string;                 // e.g.: 
 }

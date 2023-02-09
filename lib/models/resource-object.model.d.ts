@@ -1,3 +1,4 @@
+import { DidData } from "./did.model";
 import { DIDCommAttachment } from "./didComm.model";
 import { DidDocument } from "./didDocument.model";
 /** CAUTION: The internal `id` is only for the storage provider and it can be different to the *DID*.
@@ -45,4 +46,13 @@ export interface ParticipantsIdentity {
     holder?: DidDocument;
     writer?: DidDocument;
     recipients?: DidDocument[];
+}
+export interface ResourceObjectWithDidData extends ResourceObjectBase {
+    attachments?: DIDCommAttachment[];
+    attributes?: any;
+    id?: string;
+    didData?: DidData;
+    meta?: ResourceMetadata;
+    relationships?: ResourceRelationships;
+    type?: string;
 }
