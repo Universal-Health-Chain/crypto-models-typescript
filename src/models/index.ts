@@ -1,4 +1,4 @@
-/* Copyright 2022 ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
+/* Copyright (c) ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
 /* Apache License 2.0 */
 
 export * from "./aes.model"
@@ -10,7 +10,8 @@ export * from "./did.model"
 export * from "./didComm.model"
 export * from "./didInvitation.model"
 export * from "./didPublicKey.model"
-export * from "./identity.model"
+export * from "./identifiers.model"
+export * from "./identity.models"
 export * from "./jwa.model"
 export * from "./jwe.model"
 export * from "./jwk.model"

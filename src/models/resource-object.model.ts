@@ -1,4 +1,4 @@
-/* Copyright 2022 ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
+/* Copyright (c) ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
 /* Apache License 2.0 */
 
 import { DIDCommAttachment } from "./didComm.model";
@@ -24,7 +24,7 @@ export interface ResourceRequest {
 
 /** Metadata for a JSON:API Resource Object
  *  - created (Conditional): required when creating a resource object, e.g.: "2019-03-23T06:35:22Z"
- *  - updated (Conditional): required when updating a resource object, e.g.: "2022-08-10T13:40:06Z"
+ *  - updated (Conditional): required when updating a resource object, e.g.: "(c)-08-10T13:40:06Z"
  *  - deactivated (Conditional): required when the resoruce object is disabled (before deleting).
  *  Note: the deactivation date is the "updated" timestamp.      
  */
@@ -32,7 +32,7 @@ export interface ResourceRequest {
     // From DidDocumentMetadata
     created?:       string;     // e.g.: "2019-03-23T06:35:22Z"
     deactivated?:   boolean;    // note: the deactivation date is the "updated" timestamp.      
-    updated?:       string;     // e.g.: "2022-08-10T13:40:06Z"
+    updated?:       string;     // e.g.: "(c)-08-10T13:40:06Z"
     tags?:          string;     // list of types of resources or other non-personal tags.
 }
 

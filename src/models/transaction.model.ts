@@ -1,4 +1,4 @@
-/* Copyright 2022 ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
+/* Copyright (c) ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
 /* Apache License 2.0 */
 
 import { DidData } from "./did.model";
@@ -41,7 +41,7 @@ export interface TxDIDCommPayloadBase {
 /** Transaction: see https://gitlab.com/universal-health-chain/backend/org-management-service/-/blob/main/endpoints/cds/v1/resources/transaction/README.md)
  *  - the "aud" (audience) is the target endpoint URL.
  *  Example: `http://localhost:8006/cds-<co`untry>/v1/resources/transaction/commit`
- *  - the "body" contains a JSON:API Primary Document.
+ *  - the "body" is a JSON:API "Primary Document" containing the resouce objects in the "data" property.
  *  - the "client_id" contans what profile (wallet) has created the draft version or the final document.
  *  Example:
  *  `did:legal:healthcare:ES:::Organization:uuid:e7f01da5-7cd4-4e7c-993f-f83659684a94:HealthcareService:uuid:097c1d6c-4622-4511-a908-4417edda459c:Practitioner:uuid:77166e58-d08b-42b8-8370-480f82feded3:PractitionerRole:oid|2.16.840.1.113883.18.108|MD::Device::<multihash(pushNotificationToken)>`
@@ -56,8 +56,8 @@ export interface TxDIDCommPayloadBase {
     TxDIDCommPayloadBase
 {
     aud: string;
-    body: {
-        data: TxResourceObject[],
+    body: { // JSON:API "Primary Document" containing the resouce objects in the "data" property.
+        data: TxResourceObject[], // resource objects as per the JSON:API "Primary Document"
         id?: string; // optional: unique for the client application to identify the transaction internally.
         type: "transaction";
     },
@@ -132,14 +132,14 @@ export interface TxDIDCommPayloadBase {
  *  The `title` attribute MUST exist (human readable title for the composition)
  */
 export interface IndexDecrypted {
-    attributes: IndexAttribute[]; // the `title` attribute MUST exist.
+    attributes: IndexedAttribute[]; // the `title` attribute MUST exist.
 }
 
 /** Encrypted indexes can be created and used to perform efficient searching
  *  while protecting the privacy of entities that are storing information in the data vault.
  *  When creating an encrypted composition, blinded index properties MAY be used to perform efficient searches.
  */
-export interface IndexAttribute {
+export interface IndexedAttribute {
     name: string;
     value: string;
     unique?: boolean
@@ -149,7 +149,7 @@ export interface IndexAttribute {
  *  The `title` attribute MUST exist (human readable title for the composition)
  */
 export interface IndexEncrypted {
-    attributes: IndexAttribute[]; // the `title` attribute MUST exist.
+    attributes: IndexedAttribute[]; // the `title` attribute MUST exist.
     hmac: {
         id:     string; // e.g.: "did:ex:12345#key1",
         type:   string; // e.g.: "Sha256HmacKey2019"
@@ -157,7 +157,7 @@ export interface IndexEncrypted {
     sequence: number;
 }
 
-/** Unencrypted composition data to be encrypted before being stored and sent to an external Encrypted Data Vault (EDV).
+/** Encrypted composition data to be stored on an Encrypted Data Vault (EDV).
  *  When creating a draft, the required properties are: `_id`, `index` (`title` attribute), `meta.created`, `meta.status`.
  * - the `content` property contains the unencrypted DIDComm payload (with additional "body", "body.data[]" and "body.data[].attributes" properties).
  * - the `index` property contains unencrypted indexed attributes, where the `title` attribute MUST exist.

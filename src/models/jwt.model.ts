@@ -1,4 +1,4 @@
-/* Copyright 2022 ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
+/* Copyright (c) ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
 /* Apache License 2.0 */
 
 import { JWK } from "./jwk.model";
@@ -62,7 +62,7 @@ export interface DataJWT {
 	signature?: Uint8Array  // Signature if already signed
 };
 
-export enum JWTokenHeaderClaim { // from go-jose header constants
+export enum ClaimHeaderJWT { // from go-jose header constants
 	Type        = "typ", // string
 	ContentType = "cty", // string
 

@@ -18,7 +18,7 @@ export interface DataJWT {
     payload: object;
     signature?: Uint8Array;
 }
-export declare enum JWTokenHeaderClaim {
+export declare enum ClaimHeaderJWT {
     Type = "typ",
     ContentType = "cty",
     Algorithm = "alg",

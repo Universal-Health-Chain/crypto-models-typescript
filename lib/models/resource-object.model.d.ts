@@ -18,7 +18,7 @@ export interface ResourceRequest {
 }
 /** Metadata for a JSON:API Resource Object
  *  - created (Conditional): required when creating a resource object, e.g.: "2019-03-23T06:35:22Z"
- *  - updated (Conditional): required when updating a resource object, e.g.: "2022-08-10T13:40:06Z"
+ *  - updated (Conditional): required when updating a resource object, e.g.: "(c)-08-10T13:40:06Z"
  *  - deactivated (Conditional): required when the resoruce object is disabled (before deleting).
  *  Note: the deactivation date is the "updated" timestamp.
  */
