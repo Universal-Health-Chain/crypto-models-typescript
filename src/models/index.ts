@@ -2,6 +2,7 @@
 /* Apache License 2.0 */
 
 export * from "./aes.model"
+export * from "./asset.model"
 export * from "./cose.model"
 export * from "./credentialCommon.model"
 export * from "./credentialEBSI.model"
@@ -28,3 +29,5 @@ export * from "./proof.model"
 export * from "./resource-object.model"
 // export * from "./storage.model"
 export * from "./transaction.model"
+export * from "./api.model"
+export * from "./fhirBlockchain.model"
