@@ -1,3 +1,5 @@
+/* Copyright (c) ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
+/* Apache License 2.0 */
 
 /** Concept for Data Minimization is a simplified FHIR CodeableConcept element with only a single code and a coding system.
  *  - code (REQUIRED): Symbol in syntax defined by the system.

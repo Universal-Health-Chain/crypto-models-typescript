@@ -1,3 +1,5 @@
+/* Copyright (c) ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
+/* Apache License 2.0 */
 
 /** NOTES:
  * The summary of codes is added by the API when reading a resource (instead of duplicating data on blockchain).
@@ -5,8 +7,6 @@
  * The 'source' property is overwritted with the performer practitionerRoleId by the smart contract.
  * (instead of removing 'source' and creating another 'performer' property).
  */
-
-import { MetadataFullOnDLT } from "./asset.model";
 
 /** JSON-API common data */
 export interface CommonDataAPI {
