@@ -2,8 +2,7 @@
 /* Apache License 2.0 */
 
 import { DidPublicKeyOnDLT } from "./didPublicKey.model";
-import { DigestResultOpenIdData } from "./Proof.model";
-
+import { DigestResultOpenIdData } from "./oidc4ida.common.model";
 
 export enum KeyUseJWAlgorithm {
     enc = 'enc',
@@ -154,7 +153,6 @@ export interface KeyRotationRequestData {
         old: string; // Base64 URL Safe (UUID v4 as challenge string)
     }
 }
-
 
 /** The asset ID is the certificate serial number */
 export interface CertificateOnDLT {

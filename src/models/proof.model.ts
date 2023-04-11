@@ -1,13 +1,7 @@
 /* Copyright (c) ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
 /* Apache License 2.0 */
 
-/** Digest object represents a cryptographic hash of some bytes (e.g.: the content of a document).
- *  It has 'alg' and 'value' (Base64 encoded, not hexadecimal such as in W3C format).
- */
- export interface DigestResultOpenIdData {
-  alg:    string; // REQUIRED. Specifies the algorithm used for the calculation of the cryptographic hash. The algorithm has been negotiated previously between RP and OP during Client Registration or Management.
-  value:  string; // REQUIRED. Base64 encoded representation of the cryptographic hash.
-}
+import { DigestResultOpenIdData } from "./oidc4ida.common.model"
 
 /** ProofEBSIv2 foresees the possibility to use different types of proofs for Verifiable Credentials,
  *  such as proofs derived from eIDAS keys (qualified) to DID keys (unqualified).

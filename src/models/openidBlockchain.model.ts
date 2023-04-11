@@ -2,7 +2,10 @@
 /* Apache License 2.0 */
 
 // import { Holder } from './CredentialModel';
-import { AttachedSignatureDLT, DigestResultOpenIdData } from './Proof.model';
+import { AttachedSignatureDLT } from './proof.model';
+import { AttachmentExternalDLT, CheckDetails, VerifierDLT } from './oidc4ida.common.model';
+import { EvidenceCommonSubElementDLT, EvidenceDocumentDLT } from './oidc4ida.document.model';
+import { EvidenceElectronicRecordDLT, IssuerElectronicRecordBase } from './oidc4ida.electronicRecord.model';
 
 // NOTE: evidence.verifier.txn is the blockchain's Tx ID certification in Base58 format
 
@@ -40,12 +43,6 @@ export type EvidenceObjectDLT =
     | EvidenceBillDLT
     | EvidenceElectronicSignatureDLT;
 
-/** Attachment OpenID has digest.alg and digest.value (Base64 encoded) but FHIR Attachment not */
-export interface AttachmentExternalDLT {
-    id?:    string; // URN:UHC:OBSERVATION:UUID:<uuid>?
-    type?:  string; // 'FHIR', 'SHC','VC' instead of full MIME type
-    digest: DigestResultOpenIdData;  // REQUIRED. JSON object representing a cryptographic hash of the document content.
-}
 
 /**
  * If the OP (operator) issues a txn, it MUST maintain a corresponding audit trail.
@@ -62,198 +59,7 @@ export interface AttachmentExternalDLT {
  * onsite (Electronically onsite reading the document’s chip using an authorization certificate and card access number).
  */
 
-
-/** Note: While 'verification_process' refers to the identity verification process at the OP (operator),
- *  the 'txn' claim refers to a particular OpenID Connect transaction in which the OP attested the user's verified identity data towards a RP.
- *  'evidence' property can contain IdentityDocEvidenceOpenID, BillEvidenceOpenID and QesEvidenceOpenID objects.
- *  'assurance_level' is the Assurance level associated with the End-User Claims in the respective 'verified_claims' and
- *  its value range depends on the respective 'trust_framework' value, e.g.: eidas can have the identity assurance levels 'low', 'substantial' and 'high'.
- */
-export interface EvidenceVerificationCommon {
-    trust_framework?:       string;                 // REQUIRED for OpenID but not stored on blockchain. API will set it based on the (country) (e.g.: 'eidas'). It determines what further data is provided to the RP in the verification element.
-    assurance_level?:       string;                 // OPTIONAL (e.g.: 'low', 'substantial' and 'high' for eidas). Assurance level associated with the End-User Claims in the respective verified_claims, depending on the trust_framework.
-    assurance_process?:     AssuranceProcessDLT;    // OPTIONAL. JSON object representing the assurance process that was followed
-    time?:                  string;                 // OPTIONAL. Time stamp in ISO 8601:2004 [ISO8601-2004] YYYY-MM-DDThh:mm[:ss]TZD format representing the date and time when the identity verification process took place.
-    verification_process?:  string;                 // OPTIONAL. Unique reference to the identity verification process as performed by the OP (operator). TODO: this is the Operator login?
-}
-
-/** Note: While 'verification_process' refers to the identity verification process at the OP (operator),
- *  the 'txn' claim refers to a particular OpenID Connect transaction in which the OP attested the user's verified identity data towards a RP.
- *  'evidence' property can contain IdentityDocEvidenceOpenID, BillEvidenceOpenID and QesEvidenceOpenID objects.
- *  'assurance_level' is the Assurance level associated with the End-User Claims in the respective 'verified_claims' and
- *  its value range depends on the respective 'trust_framework' value, e.g.: eidas can have the identity assurance levels 'low', 'substantial' and 'high'.
- */
-export interface EvidenceVerificationOnDLT extends
-    EvidenceVerificationCommon
-{
-    evidence?:  EvidenceObjectDLT[];    // OpenID evidence if any (e.g.: physical document verification)
-}
-
-export interface AssuranceProcessDLT {
-    policy?:    string; // OPTIONAL: standard or policy that was followed.
-    procedure?: string; // OPTIONAL: specific procedure from the policy that was followed.
-    status?:    string; // OPTIONAL: current status of the identity verification process.
-}
-
-/** Predefined method values are given in Verification Methods (https://bitbucket.org/openid/ekyc-ida/wiki/identifiers)
- * - pipp (Physical In-Person Proofing)
- * - sripp (Supervised remote In-Person Proofing)
- * - eid (Online verification of an electronic ID card)
- * - uripp (Unsupervised remote in-person proofing with video capture of the ID document, user self-portrait video and liveness checks).
- */
-export interface EvidenceDocumentDLT extends
-    EvidenceCommonSubElementDLT  // method, time
-{
-    attachments?:       AttachmentExternalDLT;    // OPTIONAL. Representing proofs of attachments like photocopies of documents or certificates.
-    check_details?:     EvidenceCheckData[];      // OPTIONAL. Checks done in relation to the evidence. https://bitbucket.org/openid/ekyc-ida/wiki/identifiers
-    document_details?:  DocumentDetailsDLT;       // OPTIONAL. Object representing the id document used to perform the identity verification.
-    method:             string;                   // REQUIRED. The method used to verify it: pipp (Physical In-Person Proofing), sripp (Supervised remote In-Person Proofing), eid (Online verification of an electronic ID card), uripp (Unsupervised remote in-person proofing with video capture of the ID document, user self-portrait video and liveness checks). Predefined values are given in Verification Methods
-    time?:              string;                   // OPTIONAL. Time stamp in ISO 8601:2004 [ISO8601-2004] YYYY-MM-DDThh:mm[:ss]TZD format representing the date when it was verified
-    type:               'document';               // REQUIRED. Value MUST be set to 'document'. Note: id_document is an alias for document for backward compatibilty purposes but will be deprecated in future releases, implementers are recommended to use document.
-    verifier:           VerifierDLT;              // txn is required: legal entity that performed the identity verification on behalf of the OP.
-}
-
-export interface EvidenceCommonSubElementDLT {
-    method:               string;                   // REQUIRED. The method used to verify it: pipp (Physical In-Person Proofing), sripp (Supervised remote In-Person Proofing), eid (Online verification of an electronic ID card), uripp (Unsupervised remote in-person proofing with video capture of the ID document, user self-portrait video and liveness checks). Predefined values are given in Verification Methods
-    time?:                string;                   // OPTIONAL. Time stamp in ISO 8601:2004 [ISO8601-2004] YYYY-MM-DDThh:mm[:ss]TZD format representing the date when it was verified
-}
-
-/** CheckDetails is a JSON array representing the checks done in relation to the evidence.
- *  When present this array MUST have at least one member.
- *  https://bitbucket.org/openid/ekyc-ida/wiki/identifiers
- *  - check_method: REQUIRED. String representing the check done, this includes processes such as checking the authenticity of the document, or verifying the user's biometric against an identity document. For information on predefined check_details values see Section 14.
- *  - organization: OPTIONAL. String denoting the legal entity that performed the check. This SHOULD be included if the OP did not perform the check itself.
- *  - txn: OPTIONAL. Identifier referring to the identity verification transaction. The OP MUST ensure that this is present when evidence_ref element is used. The OP MUST ensure that the transaction identifier can be resolved into transaction details during an audit.
- *  - time: OPTIONAL. Time stamp in ISO 8601 [ISO8601] YYYY-MM-DDThh:mm[:ss]TZD format representing the date when the check was completed.
- */
-export interface EvidenceCheckData {
-    check_method: string; // REQUIRED. String representing the check done, this includes processes such as checking the authenticity of the document, or verifying the user's biometric against an identity document. For information on predefined check_details values see Section 14.
-    organization?: string; // OPTIONAL. String denoting the legal entity that performed the check. This SHOULD be included if the OP did not perform the check itself.
-    txn?: string; // OPTIONAL. Identifier referring to the identity verification transaction. The OP MUST ensure that this is present when evidence_ref element is used. The OP MUST ensure that the transaction identifier can be resolved into transaction details during an audit.
-    time?: string; // OPTIONAL. Time stamp in ISO 8601 [ISO8601] YYYY-MM-DDThh:mm[:ss]TZD format representing the date when the check was completed.
-}
-
-/** 'organization' is the organization ID which performed the verification on behalf of the OP */
-export interface VerifierDLT {
-    organization:   string; // organization ID which performed the verification on behalf of the OP.
-    txn?:           string; // evidence transaction ID (base58) for audit (added by SC)
-}
-
-/** OpenID 'document' evidence sub-element.
- * - 'type' of the (physical) document (standarized).
- * - 'date_of_issuance' is the date the document was issued as ISO 8601:2004 YYYY-MM-DD format.
- * - 'date_of_expiry' is the date the document will expire as ISO 8601:2004 YYYY-MM-DD format.
- * - 'serial_number' is the model of the document irrespective of any personalization information (usually physical artefacts and is present before personalization).
- * - 'document_number' is the unique document ID that was issued to the End-User and will change if it is reissued, e.g., a passport number, certificate number, etc.
- *  Note: number can be used as an alias for 'document_number' for backward compatibilty purposes but will be deprecated in future releases, implementers are recommended to use document_number.
- */
- export interface DocumentDetailsBase {
-    date_of_expiry?:    string;     // OPTIONAL. If this attribute exists for the particular type of document. The date the document will expire as ISO 8601:2004 YYYY-MM-DD format.
-    date_of_issuance?:  string;     // OPTIONAL. If this attribute exists for the particular type of document. The date the document was issued as ISO 8601:2004 YYYY-MM-DD format.
-    document_number?:   string;     // OPTIONAL. Unique document ID that was issued to the End-User. This is used on one document and will change if it is reissued, e.g., a passport number, certificate number, etc. Note: number can be used as an alias for 'document_number' for backward compatibilty purposes but will be deprecated in future releases, implementers are recommended to use document_number.
-    serial_number?:     string;     // OPTIONAL. Model of document irrespective of any personalization information (usually physical artefacts and is present before personalization).
-    type:               string;     // REQUIRED. Standardized values are defined in the Identity Documents section. The OP MAY use other than the predefined values in which case the RPs will either be unable to process the assertion, just store this value for audit purposes, or apply bespoken business logic to it.
-}
-
-/** JSON object representing the document used to perform the identity verification.
- *  - type: REQUIRED. Standardized values are defined in the Identity Documents section. The OP MAY use other than the predefined values in which case the RPs will either be unable to process the assertion, just store this value for audit purposes, or apply bespoken business logic to it.
- *  - personal_number: OPTIONAL. It is the subject's DID URI (can be also the holder).
- *  - issuer: OPTIONAL. JSON object containing information about the issuer of this document.
- *  - date_of_issuance: REQUIRED. If this attribute exists for the particular type of document. The date the document was issued as ISO 8601:2004 YYYY-MM-DD format.
- *  - date_of_expiry: REQUIRED. If this attribute exists for the particular type of document. The date the document will expire as ISO 8601:2004 YYYY-MM-DD format.
- *  - document_number: OPTIONAL. Unique document ID that was issued to the End-User. This is used on one document and will change if it is reissued, e.g., a passport number, certificate number, etc. Note: number can be used as an alias for 'document_number' for backward compatibilty purposes but will be deprecated in future releases, implementers are recommended to use document_number.
- *  - serial_number: OPTIONAL. Model of document irrespective of any personalization information (usually physical artefacts and is present before personalization).
- */
-export interface DocumentDetailsDLT extends
-    DocumentDetailsBase // type, date_of_issuance, date_of_expiry, document_number, serial_number (model of the document irrespective of any personalization information)
-{
-    issuer?:            IssuerElectronicRecordDLT;  // OPTIONAL. Object containing information about the issuer of this document.
-    personal_number?:   string;                     // OPTIONAL. Holder.id / subjectId
-}
-
-
-/** OpenID 'electronic_record' evidence sub-element base data
- *  to be extended with 'attachments' and 'record' elements for blockchain or OpenID Evidence of Electronic Record
- *  The electronic health record can be about a VC, SHC, DGC, FHIR Bundle or single resource (e.g.: a single medical record).
- *  - 'type': always 'electronic_record.
- *  - 'check_details': OPTIONAL. Checks done in relation to the evidence. https://bitbucket.org/openid/ekyc-ida/wiki/identifiers
- *  - 'verifier': legal entity that performed the identity verification on behalf of the OP (OpenID Provider)
- *  - 'time': Time stamp in ISO 8601:2004 format representing the date when it was verified.
- */
- export interface EvidenceElectronicRecordBase {
-    check_details?: EvidenceCheckData[];      // OPTIONAL. Checks done in relation to the evidence. https://bitbucket.org/openid/ekyc-ida/wiki/identifiers
-    time?:          string;                   // OPTIONAL. Time stamp in ISO 8601:2004 [ISO8601-2004] YYYY-MM-DDThh:mm[:ss]TZD format representing the date when it was verified
-    type?:          'electronic_record';      // REQUIRED but not stored on blockchain in case of FHIR resources (they always are 'electronic_records').
-    verifier?:      VerifierDLT;              // OPTIONAL. A JSON object denoting the legal entity that performed the identity verification on behalf of the OP.
-}
-
-/** OpenID 'electronic_record' evidence sub-element for blockchain.
- *  The electronic health record can be about a VC, SHC, DGC, FHIR Bundle or single resource (e.g.: a single medical record).
- *  - 'record': 'source' (issuer), 'personal_number' (subject's DID), 'created_at', 'date_of_expiry', 'type' ('idcard' or 'vc', 'shc', 'dgc', 'fhir', etc: see 'Electronic Records' at https://bitbucket.org/openid/ekyc-ida/wiki/identifiers)
- *  - 'attachments': only external attachments are allowed for blockchain certification (no inline data)
- *  - 'type': always 'electronic_record.
- *  - 'validation_method': how the authenticity of the document was determined.
- *  - 'verification_method': how the user was proven to be the owner of the claims.
- *  - 'verifier': legal entity that performed the identity verification on behalf of the OP (OpenID Provider)
- *  - 'time': Time stamp in ISO 8601:2004 format representing the date when it was verified.
- * 
- *  NOTE: 'document_details' is not for electronic records (use 'record' instead).
- */
-export interface EvidenceElectronicRecordDLT extends
-    EvidenceElectronicRecordBase    // 'type', 'validation_method', 'verification_method', 'verifier', 'time'
-{
-    attachments?:   AttachmentExternalDLT[];  // OPTIONAL. Array of JSON objects representing attachments like photocopies of documents or certificates.
-    record?:        ElectronicRecordDLT;      // JSON object representing the id document used to perform the id verification
-}
-
-/** OpenID 'electronic_record' evidence sub-element can be about an ID card, VC, SHC, DGC, etc.
- *  - 'type': can be 'idcard', 'vc', 'shc', 'dgc', 'fhir', etc (see 'Electronic Records' at https://bitbucket.org/openid/ekyc-ida/wiki/identifiers)
- *  - 'created_at': is the same as 'validFrom' property in a W3C credential.
- *  - 'date_of_expiry': it the same as 'validUntil' in a W3C credential.
- *  - 'personal_number' is the subject's DID URI, similar to 'holder.id' property in a W3C credential.
- *
- *  NOTE: 'personal_number' (subject DID URI) is not excluded for now?
- */
-export interface ElectronicRecordBase {
-    type:               string;             // REQUIRED. string;denoting the type of electronic record. See https://bitbucket.org/openid/ekyc-ida/wiki/identifiers
-    created_at?:        string;             // OPTIONAL. The time the record was created as ISO 8601:2004 [ISO8601-2004] YYYY-MM-DDThh:mm[:ss]TZD format    date_of_expiry?:    string; // REQUIRED. If this attribute exists for the particular type of document. The date the document will expire as ISO 8601:2004 YYYY-MM-DD format.
-    date_of_expiry?:    string;             // OPTIONAL. The date the evidence will expire as ISO 8601:2004 [ISO8601-2004] YYYY-MM-DD format.
-    source?:            IssuerElectronicRecordBase; // OPTIONAL. Issuer as source of the record (can have jurisdiction and )
-    personal_number?:   string;                     // OPTIONAL. Subject DID URI (it can be also the holder ID).
-}
-
-/** OpenID 'electronic_record' evidence sub-element can be about a VC, SHC of DGC.
- *  - 'type': String denoting the type of electronic record. It can be a predefined value (idcard, etc) or 'vc', 'shc', 'dgc', 'fhir', etc (see 'Electronic Records' at https://bitbucket.org/openid/ekyc-ida/wiki/identifiers)
- *  - 'created_at' is the issued property.
- *  - 'date_of_expiry' it the periodEnd.
- *  NOTE:
- *  - 'personal_number' (subject DID) is excluded for now? (it is also the same as the 'holder.id' property in VC).
- */
-export interface ElectronicRecordDLT extends
-    ElectronicRecordBase    // 'type', 'personal_number', 'created_at', 'date_of_expiry'
-{
-    source?: IssuerElectronicRecordDLT; // OPTIONAL. Issuer as source of the record (API can set the name and jurisdiction for the OpenID source element)
-}
-
 // TODO: IssuerElectronicRecordOpenID with personal_number
-
-/** Issuer's anonymized information (can be used for research purposes) */
-export interface IssuerElectronicRecordBase {
-    country_code?:  string; // ISO 3166/ICAO 3-letter codes [ICAO-Doc9303]
-    region?:        string; // ISO: State, province, prefecture, or region component.
-    // postal_code?:string; // Zip code or postal code component.
-}
-
-/** It replaces the issuer 'name' by 'id' and 'type' (for blockchain)
- *  and also includes 'country' and 'region' (but not 'postal_code', 'locality' or 'stree_address').
- */
-export interface IssuerElectronicRecordDLT extends
-    IssuerElectronicRecordBase
-{
-    id?:            string; // custom UHC property instead of 'name'
-    type?:          string; // custom UHC property
-}
-
 /** It may include all elements of the OpenID Connect address Claim. */
 export interface IssuerElectronicRecordOpenID extends
     IssuerElectronicRecordBase
@@ -265,12 +71,11 @@ export interface IssuerElectronicRecordOpenID extends
     postal_code?:       string; // Zip code or postal code component.
     jurisdiction?:      string;
     country?:           string; // Country name from 'country_code' ISO.
-
 }
 
 /** OpenID 'vouch' evidence sub-element */
 export interface EvidenceVouchBase {
-    check_details?: EvidenceCheckData[];    // OPTIONAL. Checks done in relation to the evidence. https://bitbucket.org/openid/ekyc-ida/wiki/identifiers
+    check_details?: CheckDetails[];    // OPTIONAL. Checks done in relation to the evidence. https://bitbucket.org/openid/ekyc-ida/wiki/identifiers
     time?:          string;                 // OPTIONAL. Time stamp in ISO 8601:2004 [ISO8601-2004] YYYY-MM-DDThh:mm[:ss]TZD format representing the date when it was verified
     type:           'vouch';                // REQUIRED. Value MUST be set to 'vouch'.
     verifier?:       VerifierDLT;           // OPTIONAL. Object denoting the legal entity that performed the identity verification on behalf of the OP.
@@ -354,8 +159,9 @@ export interface EvidenceElectronicSignatureDLT extends
     attachments?:   AttachedSignatureDLT[];   // OPTIONAL. Array of JSON objects containing signatures, e.g. 'jws' or 'Ed25519' signature types.
 }
 
+/*
 export interface EvidenceAsset extends 
-    EvidenceVerificationCommon
+    VerificationCommon
 {
     evidence: any;
     meta: {
@@ -363,7 +169,7 @@ export interface EvidenceAsset extends
         digest: DigestResultOpenIdData;
         txn: string;
     }
-}
+}*/
 
 // ------------------------
 

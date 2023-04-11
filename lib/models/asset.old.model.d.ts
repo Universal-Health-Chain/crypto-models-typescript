@@ -1,11 +1,9 @@
-import { CommonDataAPI } from "./api.model";
+import { ProofCertificationBasic } from "./proof.model";
 import { MetaFhirOnDLT } from "./fhirBlockchain.model";
+import { ResourceCommonBase } from "./jsonApi.model";
 import { StandardJWE } from "./jwe.model";
-import { EvidenceVerificationOnDLT } from "./openidBlockchain.model";
 import { VerificationEvidencesOpenID } from "./openidEvidence.model";
-import { ProofCertificationBasic } from "./Proof.model";
-/** Both OpenID 'country_code' and FHIR country code for National Identity Documents ('NNxxx') use ISO 3166/ICAO 3-letter codes [ICAO-Doc9303] */
-export declare const CountryAlpha3ISO: string;
+import { MetadataGeographicOnDLT, MetadataResearch } from "./metadata.model";
 /** canonicalization algorithm used for generating the digest values */
 export interface CanonicalData {
     alg: string;
@@ -123,7 +121,7 @@ export interface VerificationOnDLT extends ProofCertificationBasic {
     status?: string;
     notarization?: NotarizationHealthDLT;
     participants?: ParticipantsCertification;
-    openId?: EvidenceVerificationOnDLT;
+    openId?: VerificationOnDLT;
     trace?: TraceOnDLT;
 }
 /**
@@ -152,7 +150,7 @@ export interface NotarizationHealthDLT {
  *
  *  NOTE: 'participants' are now in the 'verification' data for blockchain notarization, the public keys will be removed by the SC.
  */
-export interface DataToPrivateResearchSC extends CommonDataAPI {
+export interface DataToPrivateResearchSC extends ResourceCommonBase {
     meta?: MetadataPrivateAssetOnDLT;
     rendered?: RenderedDataToSC;
     twin?: boolean;
@@ -224,7 +222,7 @@ export interface MetadataFullOnDLT extends MetadataPublicAssetOnDLT {
  * NOTE: The summary of codes will be added by the API if needed, instead of duplicating data on blockchain.
  */
 export interface MetadataPrivateAssetOnDLT extends MetadataPublicAssetOnDLT {
-    research?: ResearchMetadataOnDLT;
+    research?: MetadataResearch;
     fhir?: MetaFhirOnDLT;
 }
 /** The 'meta' property is a set of metadata that provides technical and workflow context to the resource.
@@ -244,23 +242,6 @@ export interface MetadataPublicAssetOnDLT {
  *      - 'trust_framework', 'assurance_level', 'assurance_process', 'time', 'verification_process' (OpenID properties).
  *      - 'canAlg', 'holder', 'issuerOrg', 'typeHL7', 'time' and 'writerDID' or 'writer' (with id and type).
  */
-/** country, state, systemVersion, sectionCode, sectionSystem and serviceType.
- * 'txn' is not here but in the 'verification' element.
- * 'index' elements (codes and customTags) are not here to avoid data duplication on blockchain.
- */
-export interface ResearchMetadataOnDLT extends MetadataGeographicOnDLT {
-    sectionCode?: string;
-    sectionSystem?: string;
-    serviceType?: string;
-    systemVersion?: string;
-}
-/** Country SHALL be mandatory for both research and public certification
- *  to know the channel, but it is not stored when doing public certification.
- */
-export interface MetadataGeographicOnDLT {
-    country?: typeof CountryAlpha3ISO;
-    state?: string;
-}
 /**
  *  - status: HL7 status (other is possible)
  *  - events: data for traceability, additional to the HL7 'status' data.
@@ -299,7 +280,7 @@ export interface VerificationEHR extends ProofCertificationBasic {
  *
  *  NOTE: It does not include 'relationships': issuerOrgDID, performerId, performerType, holderId, subjectId are in the attributes.
  */
-export interface CertificationDataOutput extends CommonDataAPI {
+export interface CertificationDataOutput extends ResourceCommonBase {
     twin: boolean;
     meta: MetadataFullOnDLT;
     verification?: VerificationEHR;

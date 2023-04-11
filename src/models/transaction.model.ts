@@ -3,19 +3,20 @@
 
 import { DidData } from "./did.model";
 import { DIDCommAttachment } from "./didComm.model";
+import { MetadataResourceObject, ResourceObjectWithDIDCommAttachments, ResourceRequest } from "./jsonApi.model";
 import { StandardJWE } from "./jwe.model";
-import { ResourceObjectBase, ResourceRequest } from "./resource-object.model";
 
 /** The `didData.didDocument.id` field is required and it is the **DID** of the resource object (main identifier).
  *  CAUTION: The internal `id` is only for the storage provider and it can be different to the DID.
  */
 export interface TxResourceObject extends
-    ResourceObjectBase // attachments, attributes, id, type
+    ResourceObjectWithDIDCommAttachments // attachments, attributes, id, type
 {
     attachments?: DIDCommAttachment[];
     attributes?: any;
     didData: DidData; // the DID is in the "didData.didDocument.id"
     id?: string; // this "id" can be internal for the storage provider and different to the DID
+    metadata?: MetadataResourceObject;
     request?: ResourceRequest;
     type?: string;
 }
@@ -119,7 +120,7 @@ export interface TxDIDCommPayloadBase {
  *      - deactivated (Conditional): required when the storage object is disabled (before deleting).
  *  Note: the deactivation date is the "updated" timestamp.
  */
- export interface TxCompositionBase { // old StorageBase
+export interface TxCompositionBase { // old StorageBase
     "_deleted"?:    boolean;                // PouchDB / CouchDB sets it when deleting a document.
     "_id":          string;                 // PouchDB / CouchDB / MongoDB internal database ID.
     "_rev"?:        string;                 // PouchDB / CouchDB manages the version automatically.
@@ -172,7 +173,7 @@ export interface IndexEncrypted {
  *      - deactivated (Conditional): required when the storage object is disabled (before deleting).
  *  Note: the deactivation date is the "updated" timestamp.
  */
- export interface TxCompositionEncrypted { // old StorageBase
+export interface TxCompositionEncrypted { // old StorageBase
     "_deleted"?:    boolean;                // PouchDB / CouchDB sets it when deleting a document.
     "_id":          string;                 // PouchDB / CouchDB / MongoDB internal database ID.
     "_rev"?:        string;                 // PouchDB / CouchDB manages the version automatically.

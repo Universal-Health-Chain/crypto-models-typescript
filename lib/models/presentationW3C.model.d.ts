@@ -1,6 +1,6 @@
 import { TypedId } from "./credentialCommon.model";
 import { StandardVC } from "./credentialW3C.model";
-import { ProofFullW3C } from "./Proof.model";
+import { ProofFullW3C } from "./proof.model";
 export interface VPresentationBaseWithoutVC {
     '@context'?: string[];
     id?: string;

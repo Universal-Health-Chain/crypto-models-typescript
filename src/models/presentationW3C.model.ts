@@ -3,7 +3,7 @@
 
 import { TypedId } from "./credentialCommon.model";
 import { StandardVC } from "./credentialW3C.model";
-import { ProofFullW3C } from "./Proof.model";
+import { ProofFullW3C } from "./proof.model";
 
 // VPBaseWithoutVC does not define "verifiableCredential" (it must to be extended)
 export interface VPresentationBaseWithoutVC {

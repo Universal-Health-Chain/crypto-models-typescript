@@ -1,15 +1,16 @@
 import { DidData } from "./did.model";
 import { DIDCommAttachment } from "./didComm.model";
+import { MetadataResourceObject, ResourceObjectWithDIDCommAttachments, ResourceRequest } from "./jsonApi.model";
 import { StandardJWE } from "./jwe.model";
-import { ResourceObjectBase, ResourceRequest } from "./resource-object.model";
 /** The `didData.didDocument.id` field is required and it is the **DID** of the resource object (main identifier).
  *  CAUTION: The internal `id` is only for the storage provider and it can be different to the DID.
  */
-export interface TxResourceObject extends ResourceObjectBase {
+export interface TxResourceObject extends ResourceObjectWithDIDCommAttachments {
     attachments?: DIDCommAttachment[];
     attributes?: any;
     didData: DidData;
     id?: string;
+    metadata?: MetadataResourceObject;
     request?: ResourceRequest;
     type?: string;
 }

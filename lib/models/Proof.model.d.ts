@@ -1,10 +1,4 @@
-/** Digest object represents a cryptographic hash of some bytes (e.g.: the content of a document).
- *  It has 'alg' and 'value' (Base64 encoded, not hexadecimal such as in W3C format).
- */
-export interface DigestResultOpenIdData {
-    alg: string;
-    value: string;
-}
+import { DigestResultOpenIdData } from "./oidc4ida.common.model";
 /** ProofEBSIv2 foresees the possibility to use different types of proofs for Verifiable Credentials,
  *  such as proofs derived from eIDAS keys (qualified) to DID keys (unqualified).
  *  In EBSI 2.0, every V-ID will only contain a single proof, which must be derived from eIDAS keys.

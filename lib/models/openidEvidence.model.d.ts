@@ -1,6 +1,9 @@
-import { EvidenceVerificationCommon, EvidenceCheckData, VerifierDLT, AttachmentExternalDLT, DocumentDetailsBase, EvidenceElectronicRecordBase, ElectronicRecordBase, EvidenceVouchBase, VoucherAttestationBase, VoucherIssuerDLT, EvidenceBillBase, EvidenceElectronicSignatureBase } from "./openidBlockchain.model";
+import { AttachmentExternalDLT, CheckDetails, DigestResultOpenIdData, VerifierDLT } from "./oidc4ida.common.model";
+import { DocumentDetailsBase } from "./oidc4ida.document.model";
+import { ElectronicRecordBase, EvidenceElectronicRecordBase } from "./oidc4ida.electronicRecord.model";
+import { VerificationCommon } from "./oidc4ida.verification.model";
+import { EvidenceVouchBase, VoucherAttestationBase, VoucherIssuerDLT, EvidenceBillBase, EvidenceElectronicSignatureBase } from "./openidBlockchain.model";
 import { ClaimAddressOpenID, ClaimsFullOpenID } from "./openidClaims.model";
-import { DigestResultOpenIdData } from "./Proof.model";
 /** Evidence is the certification of the authenticity of some (physical) document, (electronic) record, (electronic) signature, (utility) bill or vouch.
  * OpenID Connect for Identity Assurance 1.0: https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html
  * 5.1.1. Evidence Element - types of evidence:
@@ -67,7 +70,7 @@ export interface IdentityAssuranceOpenID {
  *  'assurance_level' is the Assurance level associated with the End-User Claims in the respective 'verified_claims' and
  *  its value range depends on the respective 'trust_framework' value, e.g.: eidas can have the identity assurance levels 'low', 'substantial' and 'high'.
  */
-export interface VerificationEvidencesOpenID extends EvidenceVerificationCommon {
+export interface VerificationEvidencesOpenID extends VerificationCommon {
     trust_framework: string;
     evidence?: EvidenceObjectOpenID[];
 }
@@ -82,7 +85,7 @@ export declare type EvidenceObjectOpenID = EvidenceElectronicRecordOpenID | Evid
 export interface EvidenceDocumentOpenID extends CommonSubElementOpenID {
     type: 'document';
     attachments?: ContentAttachedOpenID[];
-    check_details?: EvidenceCheckData[];
+    check_details?: CheckDetails[];
     verifier?: VerifierDLT;
     document_details?: DocumentDetailsOpenID;
 }

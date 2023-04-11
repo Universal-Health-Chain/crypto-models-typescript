@@ -1,12 +1,12 @@
-import { CommonDataAPI } from "./api.model";
-import { MetaFhirOnDLT } from "./fhirBlockchain.model";
-import { StandardJWE } from "./jwe.model";
-import { EvidenceVerificationOnDLT } from "./openidBlockchain.model";
-import { VerificationEvidencesOpenID } from "./openidEvidence.model";
-import { ProofCertificationBasic } from "./Proof.model";
+/* Copyright (c) ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
+/* Apache License 2.0 */
 
-/** Both OpenID 'country_code' and FHIR country code for National Identity Documents ('NNxxx') use ISO 3166/ICAO 3-letter codes [ICAO-Doc9303] */
-export const CountryAlpha3ISO:string = 'AFG'||'ALB'||'DZA'||'ASM'||'AND'||'AGO'||'AIA'||'ATA'||'ATG'||'ARG'||'ARM'||'ABW'||'AUS'||'AUT'||'AZE'||'BHS'||'BHR'||'BGD'||'BRB'||'BLR'||'BEL'||'BLZ'||'BEN'||'BMU'||'BTN'||'BOL'||'BES'||'BIH'||'BWA'||'BVT'||'BRA'||'IOT'||'BRN'||'BGR'||'BFA'||'BDI'||'CPV'||'KHM'||'CMR'||'CAN'||'CYM'||'CAF'||'TCD'||'CHL'||'CHN'||'CXR'||'CCK'||'COL'||'COM'||'COD'||'COG'||'COK'||'CRI'||'HRV'||'CUB'||'CUW'||'CYP'||'CZE'||'CIV'||'DNK'||'DJI'||'DMA'||'DOM'||'ECU'||'EGY'||'SLV'||'GNQ'||'ERI'||'EST'||'SWZ'||'ETH'||'FLK'||'FRO'||'FJI'||'FIN'||'FRA'||'GUF'||'PYF'||'ATF'||'GAB'||'GMB'||'GEO'||'DEU'||'GHA'||'GIB'||'GRC'||'GRL'||'GRD'||'GLP'||'GUM'||'GTM'||'GGY'||'GIN'||'GNB'||'GUY'||'HTI'||'HMD'||'VAT'||'HND'||'HKG'||'HUN'||'ISL'||'IND'||'IDN'||'IRN'||'IRQ'||'IRL'||'IMN'||'ISR'||'ITA'||'JAM'||'JPN'||'JEY'||'JOR'||'KAZ'||'KEN'||'KIR'||'PRK'||'KOR'||'KWT'||'KGZ'||'LAO'||'LVA'||'LBN'||'LSO'||'LBR'||'LBY'||'LIE'||'LTU'||'LUX'||'MAC'||'MDG'||'MWI'||'MYS'||'MDV'||'MLI'||'MLT'||'MHL'||'MTQ'||'MRT'||'MUS'||'MYT'||'MEX'||'FSM'||'MDA'||'MCO'||'MNG'||'MNE'||'MSR'||'MAR'||'MOZ'||'MMR'||'NAM'||'NRU'||'NPL'||'NLD'||'NCL'||'NZL'||'NIC'||'NER'||'NGA'||'NIU'||'NFK'||'MNP'||'NOR'||'OMN'||'PAK'||'PLW'||'PSE'||'PAN'||'PNG'||'PRY'||'PER'||'PHL'||'PCN'||'POL'||'PRT'||'PRI'||'QAT'||'MKD'||'ROU'||'RUS'||'RWA'||'REU'||'BLM'||'SHN'||'KNA'||'LCA'||'MAF'||'SPM'||'VCT'||'WSM'||'SMR'||'STP'||'SAU'||'SEN'||'SRB'||'SYC'||'SLE'||'SGP'||'SXM'||'SVK'||'SVN'||'SLB'||'SOM'||'ZAF'||'SGS'||'SSD'||'ESP'||'LKA'||'SDN'||'SUR'||'SJM'||'SWE'||'CHE'||'SYR'||'TWN'||'TJK'||'TZA'||'THA'||'TLS'||'TGO'||'TKL'||'TON'||'TTO'||'TUN'||'TUR'||'TKM'||'TCA'||'TUV'||'UGA'||'UKR'||'ARE'||'GBR'||'UMI'||'USA'||'URY'||'UZB'||'VUT'||'VEN'||'VNM'||'VGB'||'VIR'||'WLF'||'ESH'||'YEM'||'ZMB'||'ZWE'||'ALA';
+import { ProofCertificationBasic } from "./proof.model";
+import { MetaFhirOnDLT } from "./fhirBlockchain.model";
+import { ResourceCommonBase } from "./jsonApi.model";
+import { StandardJWE } from "./jwe.model";
+import { VerificationEvidencesOpenID } from "./openidEvidence.model";
+import { CountryAlpha3ISO, MetadataGeographicOnDLT, MetadataResearch } from "./metadata.model";
 
 // --- FROM CLAIMS ---
 
@@ -170,13 +170,13 @@ export interface TraceOnDLT {
  export interface VerificationOnDLT extends
     ProofCertificationBasic
 {
-    status?:        string;                         // HL7 status (other is possible)
+    status?:        string;                     // HL7 status (other is possible)
     // use MetaDidDocument for traceability
-    // events?:     EventsInfoOnDLT;                // data for traceability, additional to the HL7 'status' data.
-    notarization?:  NotarizationHealthDLT;            // credential, DGC, FHIR, OMOP, openEHR, and/or SHC.
-    participants?:  ParticipantsCertification;      // creatorId, holderId, issuerId, subjectId, subjectJwk, writerId, writerType.
-    openId?:        EvidenceVerificationOnDLT; // 'trust_framework', 'assurance_level', 'assurance_process', 'time', 'verification_process', 'evidence': array of OpenID evidences, following the OpenID standard (evidence instead of evidences)
-    trace?:         TraceOnDLT;                     // channel, txn, txTime
+    // events?:     EventsInfoOnDLT;            // data for traceability, additional to the HL7 'status' data.
+    notarization?:  NotarizationHealthDLT;      // credential, DGC, FHIR, OMOP, openEHR, and/or SHC.
+    participants?:  ParticipantsCertification;  // creatorId, holderId, issuerId, subjectId, subjectJwk, writerId, writerType.
+    openId?:        VerificationOnDLT;          // 'trust_framework', 'assurance_level', 'assurance_process', 'time', 'verification_process', 'evidence': array of OpenID evidences, following the OpenID standard (evidence instead of evidences)
+    trace?:         TraceOnDLT;                 // channel, txn, txTime
 }
 
 /**
@@ -209,7 +209,7 @@ export interface TraceOnDLT {
  *  NOTE: 'participants' are now in the 'verification' data for blockchain notarization, the public keys will be removed by the SC.
  */
 export interface DataToPrivateResearchSC extends
-    CommonDataAPI  // id, type
+    ResourceCommonBase  // id, type
 {
     meta?:          MetadataPrivateAssetOnDLT;  // FHIR meta properties, summary or 'index' (codes, customTags), research (country, state, systemVersion, sectionCode, sectionSystem and serviceType).
     rendered?:      RenderedDataToSC;           // without source or summary
@@ -301,7 +301,7 @@ export interface PublicAssetRecordOnDLT
  export interface MetadataPrivateAssetOnDLT extends 
     MetadataPublicAssetOnDLT
  {
-    research?:  ResearchMetadataOnDLT,  // country, state, systemVersion, section, serviceType
+    research?:  MetadataResearch,  // country, state, systemVersion, section, serviceType
     fhir?:      MetaFhirOnDLT           // versionId, lastUpdated, security, source (replaced with the writerId)
     // scope?:  string;                 // UNID meta data: OpenID scope, only for practitionerRole
     // scopes?: string[];
@@ -325,27 +325,6 @@ export interface MetadataPublicAssetOnDLT {
  *      - 'trust_framework', 'assurance_level', 'assurance_process', 'time', 'verification_process' (OpenID properties).
  *      - 'canAlg', 'holder', 'issuerOrg', 'typeHL7', 'time' and 'writerDID' or 'writer' (with id and type).
  */
-
-/** country, state, systemVersion, sectionCode, sectionSystem and serviceType.
- * 'txn' is not here but in the 'verification' element.
- * 'index' elements (codes and customTags) are not here to avoid data duplication on blockchain.
- */
-export interface ResearchMetadataOnDLT extends
-    MetadataGeographicOnDLT     // country, state
-{
-    sectionCode?:   string;     // OPTIONAL for DLT, but requiered for resources. Code (LOINC by default) for the health section or document category.
-    sectionSystem?: string;     // OPTIONAL. 'http://loinc.org' by default (default is not stored on blockchain).
-    serviceType?:   string;     // OPTIONAL. Creator healthcare service kind, see http://terminology.hl7.org/CodeSystem/service-type
-    systemVersion?: string;     // OPTIONAL. It is the same as 'fhirVersion' in SHC. '4.0.1' is the default value if not provided (default is not stored on blockchain)
-}
-
-/** Country SHALL be mandatory for both research and public certification
- *  to know the channel, but it is not stored when doing public certification.
- */
-export interface MetadataGeographicOnDLT {
-    country?:   typeof CountryAlpha3ISO;    // ISO 3 letter, same as OpenID and FHIR national identity sdocument NNxxx (e.g.: ESP)
-    state?:     string;                     // ISO (e.g.: ES-CL)
-}
 
 
 /**
@@ -392,7 +371,7 @@ export interface VerificationEHR extends
  *  NOTE: It does not include 'relationships': issuerOrgDID, performerId, performerType, holderId, subjectId are in the attributes.
  */
 export interface CertificationDataOutput extends
-    CommonDataAPI   // 'id' and 'type' (not stored on the blockchain)
+    ResourceCommonBase   // 'id' and 'type' (not stored on the blockchain)
 {
     twin:           boolean;
     meta:           MetadataFullOnDLT;      // 'fhir', 'research' and 'permissions' (only for PractitionerRole).

@@ -1,12 +1,14 @@
 /* Copyright (c) ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
 /* Apache License 2.0 */
 
-import { EvidenceVerificationCommon, EvidenceCheckData, VerifierDLT, AttachmentExternalDLT, DocumentDetailsBase,
-    EvidenceElectronicRecordBase, ElectronicRecordBase, EvidenceVouchBase,
-    VoucherAttestationBase, VoucherIssuerDLT, EvidenceBillBase, EvidenceElectronicSignatureBase
+import { AttachmentExternalDLT, CheckDetails, DigestResultOpenIdData, VerifierDLT } from "./oidc4ida.common.model";
+import { DocumentDetailsBase } from "./oidc4ida.document.model";
+import { ElectronicRecordBase, EvidenceElectronicRecordBase } from "./oidc4ida.electronicRecord.model";
+import { VerificationCommon } from "./oidc4ida.verification.model";
+import { EvidenceVouchBase, VoucherAttestationBase, VoucherIssuerDLT,
+    EvidenceBillBase, EvidenceElectronicSignatureBase
 } from "./openidBlockchain.model";
 import { ClaimAddressOpenID, ClaimsFullOpenID } from "./openidClaims.model";
-import { DigestResultOpenIdData } from "./Proof.model";
 
 /** Evidence is the certification of the authenticity of some (physical) document, (electronic) record, (electronic) signature, (utility) bill or vouch.
  * OpenID Connect for Identity Assurance 1.0: https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html
@@ -80,7 +82,7 @@ export interface IdentityAssuranceOpenID {
  *  its value range depends on the respective 'trust_framework' value, e.g.: eidas can have the identity assurance levels 'low', 'substantial' and 'high'.
  */
 export interface VerificationEvidencesOpenID extends
-    EvidenceVerificationCommon // trust_framework, assurance_level, assurance_process, time, verification_process
+    VerificationCommon // trust_framework, assurance_level, assurance_process, time, verification_process
 {
     trust_framework:        string;                 // REQUIRED (e.g.: 'eidas'). It determines what further data is provided to the RP in the verification element.
     evidence?:              EvidenceObjectOpenID[]; // OPTIONAL. JSON array containing information about the evidence the OP used to verify the user's identity as separate JSON objects.
@@ -105,7 +107,7 @@ export interface EvidenceDocumentOpenID extends
 {
     type:               'document';             // REQUIRED. Value MUST be set to 'document'. Note: id_document is an alias for document for backward compatibilty purposes but will be deprecated in future releases, implementers are recommended to use document.
     attachments?:       ContentAttachedOpenID[];// OPTIONAL. Array of JSON objects representing attachments like photocopies of documents or certificates.
-    check_details?:     EvidenceCheckData[];    // JSON array representing the checks done in relation to the evidence.
+    check_details?:     CheckDetails[];    // JSON array representing the checks done in relation to the evidence.
     verifier?:          VerifierDLT;            // OPTIONAL. A JSON object denoting the legal entity that performed the identity verification on behalf of the OP.
     document_details?:  DocumentDetailsOpenID;  // OPTIONAL. Object representing the id document used to perform the identity verification.
 }

@@ -1,5 +1,5 @@
 import { DidPublicKeyOnDLT } from "./didPublicKey.model";
-import { DigestResultOpenIdData } from "./Proof.model";
+import { DigestResultOpenIdData } from "./oidc4ida.common.model";
 export declare enum KeyUseJWAlgorithm {
     enc = "enc",
     sig = "sig"
