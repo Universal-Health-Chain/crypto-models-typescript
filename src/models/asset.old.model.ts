@@ -6,7 +6,7 @@ import { MetaFhirOnDLT } from "./fhirBlockchain.model";
 import { ResourceCommonBase } from "./jsonApi.model";
 import { StandardJWE } from "./jwe.model";
 import { VerificationEvidencesOpenID } from "./openidEvidence.model";
-import { CountryAlpha3ISO, MetadataGeographicOnDLT, MetadataResearch } from "./metadata.model";
+import { MetadataGeographicOnDLT, MetadataResearch } from "./metadata.model";
 
 // --- FROM CLAIMS ---
 

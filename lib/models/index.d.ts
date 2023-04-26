@@ -6,6 +6,7 @@ export * from "./credentialEBSI.model";
 export * from "./credentialW3C.model";
 export * from "./did.model";
 export * from "./didComm.model";
+export * from "./didDocument.model";
 export * from "./didInvitation.model";
 export * from "./didPublicKey.model";
 export * from "./fhirBlockchain.model";

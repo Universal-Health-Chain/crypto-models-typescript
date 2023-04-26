@@ -4,6 +4,8 @@ import { ElectronicRecordBase, EvidenceElectronicRecordBase } from "./oidc4ida.e
 import { VerificationCommon } from "./oidc4ida.verification.model";
 import { EvidenceVouchBase, VoucherAttestationBase, VoucherIssuerDLT, EvidenceBillBase, EvidenceElectronicSignatureBase } from "./openidBlockchain.model";
 import { ClaimAddressOpenID, ClaimsFullOpenID } from "./openidClaims.model";
+/** Both OIDC4IDA 'country_code' and FHIR country code for National Identity Documents ('NNxxx') use ISO 3166/ICAO 3-letter codes [ICAO-Doc9303] */
+export declare const CountryAlpha3ISO: string;
 /** Evidence is the certification of the authenticity of some (physical) document, (electronic) record, (electronic) signature, (utility) bill or vouch.
  * OpenID Connect for Identity Assurance 1.0: https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html
  * 5.1.1. Evidence Element - types of evidence:

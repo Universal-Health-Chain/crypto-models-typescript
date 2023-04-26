@@ -1,6 +1,5 @@
 import { IssuerElectronicRecordBase } from './oidc4ida.electronicRecord.model';
-/** Both OIDC4IDA 'country_code' and FHIR country code for National Identity Documents ('NNxxx') use ISO 3166/ICAO 3-letter codes [ICAO-Doc9303] */
-export declare const CountryAlpha3ISO: string;
+import { CountryAlpha3ISO } from './openidEvidence.model';
 /**
  *  - country_code: should be mandatory (ISO 3 letter, e.g.: ESP)
  *  - jurisdiction: region (ISO code, e.g.: ES-CL)
