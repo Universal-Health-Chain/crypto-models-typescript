@@ -60,7 +60,7 @@ export interface TxDIDCommPayloadFull extends TxDIDCommPayloadBase {
     response_mode: string;
     scope: "openid";
     subject: string;
-    type: "data+jar";
+    type: string;
 }
 /** If the data is less than the chunk size, it is embedded directly into the content.
  *  Otherwise, the data is sharded into chunks by the client, and each chunk is encrypted and sent to the server.
