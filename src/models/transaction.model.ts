@@ -70,7 +70,7 @@ export interface TxDIDCommPayloadBase {
     response_mode: string; // "jwt", "form_post.jwt" ("didcomm/v2" will be possible too)
     scope: "openid";
     subject: string; // DID of the target entity, e.g.: an organization, professional or patient DID.
-    type: "data+jar";
+    type: string; // TODO: REVIEW "data+jar", "didcomm-jar-api-transaction"...
 }
 
 /** If the data is less than the chunk size, it is embedded directly into the content.
