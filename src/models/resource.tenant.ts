@@ -1,7 +1,7 @@
 /* Copyright (c) ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
 /* Apache License 2.0 */
 
-import { ResourceObjectWithDIDCommAttachments } from "./jsonApi.model";
+import { ResourceObjectWithDIDCommAttachmentsAndJWKS } from "./jsonApi.model";
 
 export const organizationSchemaKind: string = 'Organization' || 'Airline' || 'Consortium' || 'Corporation' || 'EducationalOrganization' || 'FundingScheme' || 'GovernmentOrganization' || 'LibrarySystem' || 'LocalBusiness' || 'MedicalOrganization' || 'NewsMediaOrganization' || 'NGO' || 'PerformingGroup' || 'Project' || 'ResearchOrganization' || 'SportsOrganization' || 'WorkersUnion' || 'string';
 
@@ -39,7 +39,7 @@ export interface OrganizationTenantAttributes {
  *  - "url": URL of the organization (e.g.: external URL where the DID Document can be retrieved, such as https://hospital1.example.com/)
  */
 export interface OrganizationTenantResource extends
-    ResourceObjectWithDIDCommAttachments
+    ResourceObjectWithDIDCommAttachmentsAndJWKS
 {
     attributes: OrganizationTenantAttributes;
 }

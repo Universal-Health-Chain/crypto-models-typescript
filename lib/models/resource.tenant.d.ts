@@ -1,4 +1,4 @@
-import { ResourceObjectWithDIDCommAttachments } from "./jsonApi.model";
+import { ResourceObjectWithDIDCommAttachmentsAndJWKS } from "./jsonApi.model";
 export declare const organizationSchemaKind: string;
 export interface EventTenant {
     /** The end date and time of the item (in {@link http://en.wikipedia.org/wiki/ISO_8601 ISO 8601 date format}). */
@@ -31,6 +31,6 @@ export interface OrganizationTenantAttributes {
  *  - "sameAs": URI that unambiguously indicates the organization's identity, such as the DID (it contains `:cds-<territory>:` in an interoperable URI)
  *  - "url": URL of the organization (e.g.: external URL where the DID Document can be retrieved, such as https://hospital1.example.com/)
  */
-export interface OrganizationTenantResource extends ResourceObjectWithDIDCommAttachments {
+export interface OrganizationTenantResource extends ResourceObjectWithDIDCommAttachmentsAndJWKS {
     attributes: OrganizationTenantAttributes;
 }

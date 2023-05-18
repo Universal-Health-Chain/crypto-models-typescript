@@ -3,6 +3,7 @@ import { DIDCommAttachment } from './didComm.model';
 import { DidDocument } from './didDocument.model';
 import { VerifiedClaimsAssuranceDLT } from './oidc4ida.claimsVerification.model';
 import { MetadataResearch } from './metadata.model';
+import { JWKeySet } from './jwk.model';
 /** JSON-API common data:
  *  - id:  only required if the backend does not generate an ID.
  *  - type: reverse DNS is recommended.
@@ -156,8 +157,9 @@ export interface ResourceObjectBase {
     relationships?: ResourceRelationships;
     type?: string;
 }
-export interface ResourceObjectWithDIDCommAttachments extends ResourceObjectBase {
+export interface ResourceObjectWithDIDCommAttachmentsAndJWKS extends ResourceObjectSC {
     attachments?: DIDCommAttachment[];
+    jwks?: JWKeySet;
 }
 export interface ResourceObjectSC extends ResourceObjectBase {
     didData?: DidData;
@@ -167,11 +169,12 @@ export interface ResourceObjectSC extends ResourceObjectBase {
     type?: string;
     verified_claims?: VerifiedClaimsAssuranceDLT;
 }
-export interface ResourceObjectExtended extends ResourceObjectWithDIDCommAttachments, ResourceObjectSC {
+export interface ResourceObjectExtended extends ResourceObjectWithDIDCommAttachmentsAndJWKS {
     attachments?: DIDCommAttachment[];
     attributes?: any;
     didData?: DidData;
     included?: ResourceObjectSC[];
+    jwks?: JWKeySet;
     request?: ResourceRequest;
     researchStatus?: boolean;
     type?: string;

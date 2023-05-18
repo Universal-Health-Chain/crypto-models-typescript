@@ -3,14 +3,14 @@
 
 import { DidData } from "./did.model";
 import { DIDCommAttachment } from "./didComm.model";
-import { MetadataResourceObject, ResourceObjectWithDIDCommAttachments, ResourceRequest } from "./jsonApi.model";
+import { MetadataResourceObject, ResourceObjectWithDIDCommAttachmentsAndJWKS, ResourceRequest } from "./jsonApi.model";
 import { StandardJWE } from "./jwe.model";
 
 /** The `didData.didDocument.id` field is required and it is the **DID** of the resource object (main identifier).
  *  CAUTION: The internal `id` is only for the storage provider and it can be different to the DID.
  */
 export interface TxResourceObject extends
-    ResourceObjectWithDIDCommAttachments // attachments, attributes, id, type
+    ResourceObjectWithDIDCommAttachmentsAndJWKS // attachments, attributes, id, type
 {
     attachments?: DIDCommAttachment[];
     attributes?: any;

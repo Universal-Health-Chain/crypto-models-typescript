@@ -6,6 +6,7 @@ import { DIDCommAttachment } from './didComm.model';
 import { DidDocument } from './didDocument.model';
 import { VerifiedClaimsAssuranceDLT } from './oidc4ida.claimsVerification.model';
 import { MetadataResearch } from './metadata.model';
+import { JWKeySet } from './jwk.model';
 
 /** JSON-API common data:
  *  - id:  only required if the backend does not generate an ID.
@@ -187,10 +188,11 @@ export interface ResourceObjectBase {
     type?:          string;                 // reverse DNS, e.g.: "org.hl7.fhir.R5.Observation".
 }
 
-export interface ResourceObjectWithDIDCommAttachments extends
-    ResourceObjectBase
+export interface ResourceObjectWithDIDCommAttachmentsAndJWKS extends
+    ResourceObjectSC // instead of ResourceObjectBase
 {
     attachments?:   DIDCommAttachment[];
+    jwks?:          JWKeySet;
 }
 
 
@@ -207,12 +209,13 @@ export interface  ResourceObjectSC extends
 }
 
 export interface  ResourceObjectExtended extends
-    ResourceObjectWithDIDCommAttachments, ResourceObjectSC
+    ResourceObjectWithDIDCommAttachmentsAndJWKS
 {
     attachments?:       DIDCommAttachment[];        // use for unprocessed, embedded raw data (e.g. assurance of PDF or JPEG files)
     attributes?:        any;                        // use for standardized attributes from raw data (e.g.: schema.org or FHIR attributes)
     didData?:           DidData;                    // DID resolution data and DID metadata.
     included?:          ResourceObjectSC[];         // include attributes of additional resources (e.g.: departments and employess of an organization)
+    jwks?:              JWKeySet;                   // history of public keys
     request?:           ResourceRequest;            // same as FHIR request (it has method and url).
     researchStatus?:    boolean;                    // true when the anonymized and de-identifed attributes were already stored for research (avoid duplicated data for research).
     type?:              string;                     // reverse DNS, e.g.: "org.hl7.fhir.R5.Observation".
