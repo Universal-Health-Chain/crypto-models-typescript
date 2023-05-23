@@ -51,12 +51,13 @@ export interface DidDocument {
     '@context'?: 'https://w3id.org/did/v1';
     /** A set of strings that conform to the rules of [RFC3986] for URIs. */
     alsoKnownAs?: string[];
-    assertionMethod?: any;
+    /** A set of strings or Verification Method maps that conform to the rules in Verification Method properties. */
+    assertionMethod?: (DidDocumentPublicKey | string)[];
     /** Array of authentication methods.
      * A set of either Verification Method maps that conform to the rules in Verification Method properties
      * or strings that conform to the rules in 3.2 DID URL Syntax.
      */
-    authentication?: (string | object)[];
+    authentication?: (DidDocumentPublicKey | string)[];
     /** Mechanism that might be used by the DID subject to delegate a cryptographic capability to another party,
      *  such as delegating the authority to access a specific HTTP API to a subordinate.
      *  When a DID controller chooses to delegate their capability to access a protected HTTP API to a party other than themselves.
@@ -65,7 +66,7 @@ export interface DidDocument {
      *  (such as an OpenID "Bearer" access token containing the required scope and signed by the controller of the DID Document).
      *  See https://www.w3.org/TR/did-core/#capability-delegation
      */
-    capabilityDelegation?: (string | DidDocumentPublicKey)[];
+    capabilityDelegation?: (DidDocumentPublicKey | string)[];
     /** Verification method that might be used by the DID subject to invoke a cryptographic capability,
      *  such as the authorization to update the DID Document.
      *  When a DID subject needs to access a protected HTTP API that requires authorization in order to use it,
@@ -74,18 +75,17 @@ export interface DidDocument {
      *  (such as an OpenID "Bearer" access token containing the required scope and signed by the controller of the DID Document).
      *  See https://www.w3.org/TR/did-core/#capability-invocation
      */
-    capabilityInvocation?: (string | DidDocumentPublicKey)[];
+    capabilityInvocation?: (DidDocumentPublicKey | string)[];
     /** A string or a set of strings that conform to the rules in § 3.1 DID Syntax. */
-    controller?: any;
+    controller?: string | string[];
     /** The DID to which this DID Document pertains. */
     id: string;
-    keyAgreement?: any;
-    /** Array of public keys associated with the DID. */
-    publicKey?: DidDocumentPublicKey[];
+    /** A set of strings or Verification Method maps that conform to the rules in Verification Method properties. */
+    keyAgreement?: (DidDocumentPublicKey | string)[];
     /** Array of services associated with the DID. */
     service?: DidDocumentService[];
     /** A set of Verification Method maps that conform to the rules in § Verification Method properties. */
-    verificationMethod?: any;
+    verificationMethod?: DidDocumentPublicKey[];
 }
 /** DidDetailsBlockchain is similar to DidUrlResolution with additional data on the blockchain (can be duplicated on the local DB or not).
  *  Some DID parameters are completely independent of any specific DID method and function the same way for all DIDs.

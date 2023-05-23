@@ -17,6 +17,14 @@ export interface ResourceCommonBase {
     type?:      any;    // reverse DNS is recommended.
 }
 
+// IDTypePair represents an ID+type pair.
+export interface IDTypePair extends
+    ResourceCommonBase
+{
+	id:    string;  // required
+	type:  string;  // required
+}
+
 /** Error objects provide additional information about problems encountered while performing an operation.
  *  Error objects MUST be returned as an array keyed by errors in the top level of a JSON:API document.
  *  An error object MAY have the following members:
@@ -53,10 +61,23 @@ export interface AuditInfo {
 
 /**
  * - audit: audit information created by both creator, updater and smart-contract (created, updated, deactivated, channel, txId, txTime).
+ * - versionId: UNIX milliseconds when the resource was created, other than "txn" in the check element.
+ */
+export interface MetadataBaseResource {
+    // audit info created by both creator, updater and smart-contract.
+    audit?:         AuditInfo
+    // from FHIR meta
+    versionId?:     string;         // UNIX milliseconds when the resource was created, other than "txn" in the check element.
+}
+
+/**
+ * - audit: audit information created by both creator, updater and smart-contract (created, updated, deactivated, channel, txId, txTime).
  * - research: parentId, country_code, jurisdiction, type (reverse DNS) and tags (list of types of resources or other non-personal tags).
  * - versionId: UNIX milliseconds when the resource was created, other than "txn" in the check element.
  */
-export interface MetadataResourceObject {
+export interface MetadataResourceObject extends
+    MetadataBaseResource // audit, versionId
+{
     // audit info created by both creator, updater and smart-contract.
     audit?:         AuditInfo
     // specific data for both searchs and research

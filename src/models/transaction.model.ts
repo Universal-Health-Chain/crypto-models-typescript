@@ -3,7 +3,7 @@
 
 import { DidData } from "./did.model";
 import { DIDCommAttachment } from "./didComm.model";
-import { MetadataResourceObject, ResourceObjectWithDIDCommAttachmentsAndJWKS, ResourceRequest } from "./jsonApi.model";
+import { IDTypePair, MetadataResourceObject, ResourceObjectWithDIDCommAttachmentsAndJWKS, ResourceRequest } from "./jsonApi.model";
 import { StandardJWE } from "./jwe.model";
 
 /** The `didData.didDocument.id` field is required and it is the **DID** of the resource object (main identifier).
@@ -106,9 +106,8 @@ export interface TxDIDCommPayloadBase {
 }
 
 /** Unencrypted composition data to be encrypted before being stored and sent to an external Encrypted Data Vault (EDV).
- *  When creating a draft, the required properties are: `_id`, `index` (`title` attribute), `meta.created`, `meta.status`.
- * - the `content` property contains the unencrypted DIDComm payload (with additional "body", "body.data[]" and "body.data[].attributes" properties).
- * - the `index` property contains unencrypted indexed attributes, where the `title` attribute MUST exist.
+ *  When creating a draft, the required properties are: `_id`, `indexed`, `meta.created`, `meta.status`.
+ * - the `indexed` property contains safe or unsafe index of attributes (`name` and `value`).
  * - the `meta` property contains:
  *      - created (REQUIRED): UNIX epoch time (miliseconds) instead of ISO datetime, required when creating a document.
  *      - status (REQUIRED): valid status for the composition are "preliminary", "amended", "final" or "error" (FHIR specification).
@@ -121,47 +120,17 @@ export interface TxDIDCommPayloadBase {
  *  Note: the deactivation date is the "updated" timestamp.
  */
 export interface TxCompositionBase { // old StorageBase
-    "_deleted"?:    boolean;                // PouchDB / CouchDB sets it when deleting a document.
-    "_id":          string;                 // PouchDB / CouchDB / MongoDB internal database ID.
-    "_rev"?:        string;                 // PouchDB / CouchDB manages the version automatically.
-    content?:       TxDIDCommPayloadBase;   // decrypted payload, it can be encrypted as the `jwe` element before being stored.
-    index:          IndexDecrypted;         // decrypted indexed attributes, they SHALL be encrypted before being stored.
-    meta:           TxCompositionMetadata;  // "created" and "status" are required
+    "_deleted"?:    boolean;                // internal PouchDB / CouchDB when deleting a document.
+    "_id":          string;                 // internal PouchDB / CouchDB / MongoDB object ID.
+    "_rev"?:        string;                 // internal PouchDB / CouchDB version ID (automatically generated).
+    indexed?:       any;                    // safe or unsafe index of attributes (`name` and `value`).
+    meta?:          TxCompositionMetadata;  // "created" and "status" are required
 }
 
-/** Decrypted indexed attributes, they SHALL be encrypted before being stored.
- *  The `title` attribute MUST exist (human readable title for the composition)
- */
-export interface IndexDecrypted {
-    attributes: IndexedAttribute[]; // the `title` attribute MUST exist.
-}
-
-/** Encrypted indexes can be created and used to perform efficient searching
- *  while protecting the privacy of entities that are storing information in the data vault.
- *  When creating an encrypted composition, blinded index properties MAY be used to perform efficient searches.
- */
-export interface IndexedAttribute {
-    name: string;
-    value: string;
-    unique?: boolean
-}
-
-/** Encrypted indexed attributes stored.
- *  The `title` attribute MUST exist (human readable title for the composition)
- */
-export interface IndexEncrypted {
-    attributes: IndexedAttribute[]; // the `title` attribute MUST exist.
-    hmac: {
-        id:     string; // e.g.: "did:ex:12345#key1",
-        type:   string; // e.g.: "Sha256HmacKey2019"
-    },
-    sequence: number;
-}
-
-/** Encrypted composition data to be stored on an Encrypted Data Vault (EDV).
+/** Unencrypted composition data to be encrypted before being stored and sent to an external Encrypted Data Vault (EDV).
  *  When creating a draft, the required properties are: `_id`, `index` (`title` attribute), `meta.created`, `meta.status`.
  * - the `content` property contains the unencrypted DIDComm payload (with additional "body", "body.data[]" and "body.data[].attributes" properties).
- * - the `index` property contains unencrypted indexed attributes, where the `title` attribute MUST exist.
+ * - the `indexed` property contains unsafe index of attributes (`name` and `value`), not protected by HMAC.
  * - the `meta` property contains:
  *      - created (REQUIRED): UNIX epoch time (miliseconds) instead of ISO datetime, required when creating a document.
  *      - status (REQUIRED): valid status for the composition are "preliminary", "amended", "final" or "error" (FHIR specification).
@@ -173,11 +142,75 @@ export interface IndexEncrypted {
  *      - deactivated (Conditional): required when the storage object is disabled (before deleting).
  *  Note: the deactivation date is the "updated" timestamp.
  */
+export interface TxCompositionUnencrypted extends
+    TxCompositionBase
+{
+    content?:   TxDIDCommPayloadBase;   // decrypted payload, it can be encrypted as the `jwe` element before being stored.
+    indexed?:   IndexUnsafe;            // unsafe index of attributes (`name` and `value`), not protected by HMAC.
+}
+
+/** Decrypted indexed attributes, they SHALL be encrypted before being stored.
+ *  The `title` attribute MUST exist (human readable title for the composition)
+ */
+export interface IndexUnsafe {
+    attributes: IndexAttributeUnsafe[]; // the `title` attribute MUST exist.
+}
+
+/** Unsafe indexed attributes can be protected by HMAC and used to perform efficient searching
+ *  to protect the privacy of entities that are storing information in the data vault.
+ *  When creating a document composition, index properties MAY be used to perform efficient searches.
+ */
+export interface IndexAttributeUnsafe {
+    name: string;
+    value: string;
+    unique?: boolean
+}
+
+/** Safe indexed attributes can be created and used to perform efficient searching
+ *  while protecting the privacy of entities that are storing information in the data vault.
+ *  When creating an encrypted document composition, blinded index properties MAY be used to perform efficient searches.
+ */
+export interface IndexedAttributeSafe {
+    name: string;
+    value: string;
+    unique?: boolean
+}
+
+/** IndexedDataHMAC represents a collection of indexed attributes, all of which share a common MAC algorithm and key.
+ *  This format is based on https://identity.foundation/confidential-storage/#creating-encrypted-indexes.
+ *  Encrypted indexes can be created and used to perform efficient searching
+ *  while protecting the privacy of entities that are storing information in the data vault.
+ *  When creating an encrypted resource, blinded index properties MAY be used to perform efficient searches.
+ *  - "attributes" contains the indexed attributes (HMAC protected)
+ *  - "hmac" contains both HMAC key "id" (e.g. `did:ex:12345#key1`) and "type" (e.g. `Sha256HmacKey2019`).
+ *  - "sequence" ...
+ */
+export interface IndexSafe {
+    attributes: IndexedAttributeSafe[]; // HMAC attribute name and value
+    hmac:       IDTypePair;
+    sequence:   number;
+}
+
+/** Encrypted composition data to be stored on an Encrypted Data Vault (EDV).
+ *  When creating a draft, the required properties are: `_id`, `indexed` (`title` attribute), `meta.created`, `meta.status`.
+ * - the `content` property contains the unencrypted DIDComm payload (with additional "body", "body.data[]" and "body.data[].attributes" properties).
+ * - the `indexed` property contains safe indexed attributes (HMAC).
+ * - the `meta` property contains:
+ *      - status (REQUIRED): valid status for the composition are "preliminary", "amended", "final" or "error" (FHIR specification).
+ *      - created (REQUIRED): UNIX epoch time (miliseconds) instead of ISO datetime, required when creating a document.
+ *      - deactivated (Conditional): required when the storage object is disabled (before deleting).
+ *      - updated (Conditional): UNIX epoch time (miliseconds) instead of ISO datetime, required when updating a document; it can be used as the version of the composition.
+ *      - contentType (Conditional): MIME type, required when data is sharded into chunks (e.g.: "didcomm-plain+json").
+ *      - sectionCode (Conditional): required code for a health section or document category in a personal wallet.
+ *      - sectionSystem (Conditional): default is "http://loinc.org" (health section or health document category).
+ *      - tags (Conditional): non-personal data, it is required when the content data is created. 
+ *  Note: the deactivation date is the "updated" timestamp.
+ */
 export interface TxCompositionEncrypted { // old StorageBase
-    "_deleted"?:    boolean;                // PouchDB / CouchDB sets it when deleting a document.
-    "_id":          string;                 // PouchDB / CouchDB / MongoDB internal database ID.
-    "_rev"?:        string;                 // PouchDB / CouchDB manages the version automatically.
-    index:          IndexEncrypted;         // encrypted indexed attributes, they SHALL be encrypted before being stored.
+    "_deleted"?:    boolean;                // internal PouchDB / CouchDB when deleting a document.
+    "_id":          string;                 // internal PouchDB / CouchDB / MongoDB object ID.
+    "_rev"?:        string;                 // internal PouchDB / CouchDB version ID (automatically generated).
+    indexed?:       IndexSafe;        // safe indexed attributes (HMAC).
     jwe?:           StandardJWE;            // encrypted payload, it can be encrypted as the `jwe` element before being stored.
-    meta:           TxCompositionMetadata;  // "created" and "status" are required
+    meta?:          TxCompositionMetadata;  // "created" and "status" are required
 }
