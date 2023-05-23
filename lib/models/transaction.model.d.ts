@@ -104,7 +104,7 @@ export interface TxCompositionMetadata {
  */
 export interface TxCompositionBase {
     "_deleted"?: boolean;
-    "_id": string;
+    "_id"?: string;
     "_rev"?: string;
     id?: string;
     indexed?: any;

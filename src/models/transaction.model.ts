@@ -123,7 +123,7 @@ export interface TxDIDCommPayloadBase {
  */
 export interface TxCompositionBase { // old StorageBase
     "_deleted"?:    boolean;                // internal PouchDB / CouchDB when deleting a document.
-    "_id":          string;                 // internal PouchDB / CouchDB / MongoDB object ID, distinct to the external record "id".
+    "_id"?:         string;                 // internal PouchDB / CouchDB / MongoDB object ID, distinct to the external record "id".
     "_rev"?:        string;                 // internal PouchDB / CouchDB version ID (automatically generated).
     id?:            string;                 // external EDV record ID (16 bits), it can be generated deterministically.
     indexed?:       any;                    // safe or unsafe index of attributes (`name` and `value`).
