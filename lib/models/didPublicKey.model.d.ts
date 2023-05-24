@@ -1,3 +1,12 @@
+/** Based on: https://w3c-ccg.github.io/did-spec/#public-keys
+*
+*  - controller: hashed DID of the controller / owner of this key.
+*  - type: the type of this public key, such as JsonWebKey2020 as defined in https://w3c-ccg.github.io/ld-cryptosuite-registry/
+*/
+export interface DidPublicKeyOnBlockchain {
+    controller: string;
+    type: string;
+}
 /** Interface defining a public key definition entry in a DID Document.
  *  See: https://w3c-ccg.github.io/did-spec/#public-keys
  *
@@ -6,10 +15,8 @@
  *  - type: the type of this public key, such as JsonWebKey2020 as defined in https://w3c-ccg.github.io/ld-cryptosuite-registry/
  *  - controller: the DID of the controller of this key.
  */
-export interface DidPublicKeyOnDLT {
-    controller: string;
+export interface DidPublicKeyForSC extends DidPublicKeyOnBlockchain {
     id: string;
-    type: string;
 }
 /** Interface defining a public key definition entry in a DID Document.
 *  See: https://w3c-ccg.github.io/did-spec/#public-keys
@@ -23,7 +30,7 @@ export interface DidPublicKeyOnDLT {
 *  - publicKeyJwk: The value of the public key in JWK format. Only one value field will be present.
 *  - publicKeyMultibase: The value of the public key in Multibase format. Only one value field will be present.
 */
-export interface DidDocumentPublicKey extends DidPublicKeyOnDLT {
+export interface DidDocumentPublicKey extends DidPublicKeyForSC {
     /** The value of the public key in Base58 format. Only one value field will be present. */
     /** The value of the public key in Base64 format. Only one value field will be present. */
     /** The value of the public key in hex format. Only one value field will be present. */

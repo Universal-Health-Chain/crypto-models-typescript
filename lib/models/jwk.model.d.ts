@@ -1,4 +1,4 @@
-import { DidPublicKeyOnDLT } from "./didPublicKey.model";
+import { DidPublicKeyForSC } from "./didPublicKey.model";
 import { DigestResultOpenIdData } from "./oidc4ida.common.model";
 export declare enum KeyUseJWAlgorithm {
     enc = "enc",
@@ -54,7 +54,7 @@ export interface JWKeysFile extends JWKeySet {
  *  - 'controller': the DID of the controller of this key.
  *  - 'publicKeyJwk': JSON Web Key that conforms to RFC7517. It MUST NOT contain private information.
  */
-export interface DidVerificationPublicJWKey extends DidPublicKeyOnDLT {
+export interface DidVerificationPublicJWKey extends DidPublicKeyForSC {
     /** The value of the public key in JWK format. Only one value field will be present ('k' for symmetric keys). */
     publicKeyJwk: PublicJWKeyCertificationOnDLT;
 }

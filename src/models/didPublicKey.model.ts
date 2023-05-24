@@ -1,6 +1,16 @@
 /* Copyright (c) ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
 /* Apache License 2.0 */
 
+/** Based on: https://w3c-ccg.github.io/did-spec/#public-keys
+*
+*  - controller: hashed DID of the controller / owner of this key.
+*  - type: the type of this public key, such as JsonWebKey2020 as defined in https://w3c-ccg.github.io/ld-cryptosuite-registry/
+*/
+export interface DidPublicKeyOnBlockchain {
+  controller: string; // hashed controller / owner DID
+  type: string; // e.g.: "JsonWebKey2020"
+}
+
 /** Interface defining a public key definition entry in a DID Document.
  *  See: https://w3c-ccg.github.io/did-spec/#public-keys
  *
@@ -9,11 +19,10 @@
  *  - type: the type of this public key, such as JsonWebKey2020 as defined in https://w3c-ccg.github.io/ld-cryptosuite-registry/
  *  - controller: the DID of the controller of this key.
  */
- export interface DidPublicKeyOnDLT {
-  controller: string;
+export interface DidPublicKeyForSC extends DidPublicKeyOnBlockchain {
   id: string;
-  type: string;
 }
+
 /** Interface defining a public key definition entry in a DID Document.
 *  See: https://w3c-ccg.github.io/did-spec/#public-keys
 *  NOTE: publicKeyMultibase INSTEAD of publicKeyHex, publicKeyBase64, publicKeyBase58 (deprecated).
@@ -26,7 +35,7 @@
 *  - publicKeyJwk: The value of the public key in JWK format. Only one value field will be present.
 *  - publicKeyMultibase: The value of the public key in Multibase format. Only one value field will be present.
 */
-export interface DidDocumentPublicKey extends DidPublicKeyOnDLT {
+export interface DidDocumentPublicKey extends DidPublicKeyForSC {
   // DEPRECATED
   /** The value of the public key in Base58 format. Only one value field will be present. */
   // publicKeyBase58?: string;
