@@ -57,32 +57,16 @@ export interface JWKeyPublicVerificationDLT extends PublicJWKeyCertificationOnDL
     alg: string;
     k?: string;
     kid: string;
-    use?: KeyUseJWAlgorithm;
 }
 /** It is a JSON Web Key that conforms to [RFC7517]. It DOES NOT contain private information,
- *  but also it DOES NOT contain the PUBLIC KEY for Post Quantum Computing (PQC) resistance.
- *  It is RECOMMENDED that public keys JWKs use the value of kid as their fragment identifier.
- *  It is RECOMMENDED that JWK kid values are set to the public key fingerprint [RFC7638].
- *  So kid is both the digest value of the SHA-256 hash of the JWK object
- *  and the key id on the blockchain, but the asset id is the fully qualified
- *  DID URL Syntax identifier of this public key, e.g.: did:unid:person:<base58uuid>#base64-safe-url-KID
+ *  but also it DOES NOT contain the public key nor the key ID (thumbprint) for Post Quantum Computing (PQC) resistance.
  */
 export interface PublicJWKeyCertificationOnDLT {
-    alg: string;
-    kty: string;
-    use?: KeyUseJWAlgorithm.enc | KeyUseJWAlgorithm.sig;
-}
-/** The PractitionerRole or Device is like a DID document (the controller of the key).
- *  The controller will have the keys (so the index of keys is known by the controller).
- */
-export interface PublicKeyFromSC {
-    jwk: PublicJWKeyCertificationOnDLT;
-    nbf: string;
-    exp: string;
-}
-export interface PublicKeyOnDLT extends PublicKeyFromSC {
-    $_createdAt?: string;
-    $_revokedAt?: string;
+    alg?: string;
+    exp?: string;
+    kty?: string;
+    nbf?: string;
+    use?: string;
 }
 /** For Key rotation (revoke old key and create a new one) it is needed to
  *  verify the owner has the old private key and the new private key
@@ -125,12 +109,12 @@ export interface PublicBaseDilithiumJWK {
  *  - The parameter "x" MUST be present and contain the public key encoded using the base64url [RFC4648] encoding.
  *  - The parameter "xs" MAY be present and contain the shake256 of the public key encoded using the base64url [RFC4648] encoding.
  */
-export interface PublicJWKeyDilithium {
+export interface PublicJWKeyDilithium extends PublicJWKeyCertificationOnDLT, PublicBasePQKey {
     alg?: string;
+    kid?: string;
     kty?: 'PQK';
     x?: string;
     xs?: string;
-    kid?: string;
 }
 export interface PrivateJWKeyDilithium extends PublicJWKeyDilithium {
     d?: string;
@@ -142,7 +126,7 @@ export interface PrivateJWKeyDilithium extends PublicJWKeyDilithium {
  *  - The parameter "kty" MUST be "PQK".
  *  - The parameter "x" MUST be present: public key encoded using the base64url [RFC4648] encoding (but without the 32 bytes of the seed "rho"). The size of t is 12*k*n/8 bytes.
  */
-export interface PublicBaseKyberJWK {
+export interface PublicBasePQKey {
     alg?: string;
     kty?: 'PQK';
     x?: string;
@@ -158,11 +142,10 @@ export interface PublicBaseKyberJWK {
  *  The '90s' variants use AES256CTR to construct a XOF and a PRF, SHA2 for hashing and SHAKE-256 as KDF.
  *  (availability of hardware AES and SHA2 co-processors)
  */
-export interface PublicJWKeyKyber {
+export interface PublicJWKeyKyber extends PublicJWKeyCertificationOnDLT, PublicBasePQKey {
     alg?: string;
     kty?: 'PQK';
     h?: string;
-    x?: string;
 }
 export interface PrivateJWKeyKyber extends PublicJWKeyKyber {
     d?: string;
@@ -213,7 +196,7 @@ export interface VerifierKeyWithBytes extends VerificationKey {
  *  - The parameter "alg" MUST be specified, it is "kyber768-r3".
  *  - Additionally, the parameter "use" contains "enc" (encryption).
  */
-export interface JWK {
+export interface JWK extends PublicJWKeyCertificationOnDLT {
     /** JWK "alg" (Algorithm) Parameter */
     alg?: string;
     crv?: string;
@@ -257,4 +240,5 @@ export interface JWK {
     /** JWK "x5u" (X.509 URL) Parameter */
     x5u?: string;
     [propName: string]: unknown;
+    sub: string;
 }
