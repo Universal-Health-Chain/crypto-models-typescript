@@ -1,4 +1,3 @@
-import { DidPublicKeyForSC } from "./didPublicKey.model";
 import { DigestResultOpenIdData } from "./oidc4ida.common.model";
 export declare enum KeyUseJWAlgorithm {
     enc = "enc",
@@ -38,26 +37,6 @@ export interface JWKeySet {
 export interface JWKeysFile extends JWKeySet {
     timestamp?: number;
 }
-/** NOTES:
- *  Public Key traceability stores the kid (key ID) asset using the fully qualified DID URL Syntax of the public key.
- *  It is RECOMMENDED that public keys JWKs use the value of kid as their fragment identifier.
- *  It is RECOMMENDED that JWK kid values are set to the public key fingerprint [RFC7638].
- */
-/** The Verification Method is a set of parameters that can be used together with a process to independently verify a proof.
- *  For example, a cryptographic public key can be used as a verification method:
- *  it verifies that the owner possessed the associated cryptographic private key.
- *  https://www.w3.org/TR/did-core/#verification-method-properties
- *
- *  - id: fully qualified identifier of this public key, e.g. did:example:entity.id#keys-1.
- *    NOTE: generate the 'thumbprint' in case of JSON Web Key format (RFC7638).
- *  - 'type': string that references exactly one verification method type, such as JsonWebKey2020 (see https://www.w3.org/TR/did-spec-registries/ ).
- *  - 'controller': the DID of the controller of this key.
- *  - 'publicKeyJwk': JSON Web Key that conforms to RFC7517. It MUST NOT contain private information.
- */
-export interface DidVerificationPublicJWKey extends DidPublicKeyForSC {
-    /** The value of the public key in JWK format. Only one value field will be present ('k' for symmetric keys). */
-    publicKeyJwk: PublicJWKeyCertificationOnDLT;
-}
 /** Only JWK 'kid' property (keyID) is required for storing both key data and identifier on DLT: it is the hash of the JWK (RFC7638).
  *  It is RECOMMENDED that public keys JWKs use the value of kid as their fragment identifier.
  *  It is RECOMMENDED that JWK kid values are set to the public key fingerprint [RFC7638].
@@ -78,7 +57,7 @@ export interface JWKeyPublicVerificationDLT extends PublicJWKeyCertificationOnDL
     alg: string;
     k?: string;
     kid: string;
-    use: KeyUseJWAlgorithm.enc;
+    use?: KeyUseJWAlgorithm;
 }
 /** It is a JSON Web Key that conforms to [RFC7517]. It DOES NOT contain private information,
  *  but also it DOES NOT contain the PUBLIC KEY for Post Quantum Computing (PQC) resistance.
@@ -91,7 +70,7 @@ export interface JWKeyPublicVerificationDLT extends PublicJWKeyCertificationOnDL
 export interface PublicJWKeyCertificationOnDLT {
     alg: string;
     kty: string;
-    use: KeyUseJWAlgorithm.enc | KeyUseJWAlgorithm.sig;
+    use?: KeyUseJWAlgorithm.enc | KeyUseJWAlgorithm.sig;
 }
 /** The PractitionerRole or Device is like a DID document (the controller of the key).
  *  The controller will have the keys (so the index of keys is known by the controller).
