@@ -1,4 +1,5 @@
 import { JWK, PublicJWKeyCertificationOnDLT } from "./jwk.model";
+import { PublicMetadataOnBlockchain } from "./metadata.model";
 /** NOTES:
  *  Public Key traceability stores the kid (key ID) asset using the fully qualified DID URL Syntax of the public key.
  *  It is RECOMMENDED that public keys JWKs use the value of kid as their fragment identifier.
@@ -13,7 +14,7 @@ import { JWK, PublicJWKeyCertificationOnDLT } from "./jwk.model";
  *    NOTE: generate the 'thumbprint' in case of JSON Web Key format (RFC7638).
  *  - 'type': string that references exactly one verification method type, such as JsonWebKey2020 (see https://www.w3.org/TR/did-spec-registries/ ).
  *  - 'controller': the DID of the controller of this key.
- *  - 'publicKeyJwk': JSON Web Key that conforms to RFC7517. It MUST NOT contain private information.
+ *  - 'publicKeyJwk': the public 'attributes' of a JSON Web Key that conforms to RFC7517. It MUST NOT contain private information.
  */
 export interface DidVerificationPublicJWKey extends DidPublicKeyForSC {
     /** The value of the public key in JWK format. Only one value field will be present ('k' for symmetric keys). */
@@ -24,10 +25,11 @@ export interface DidVerificationPublicJWKey extends DidPublicKeyForSC {
 *  - controller: hashed DID of the controller / owner of this key.
 *  - type: the type of this public key, such as JsonWebKey2020 as defined in https://w3c-ccg.github.io/ld-cryptosuite-registry/
 */
-export interface DidPublicKeyOnBlockchain {
+export interface PublicKeyResourceOnBlockchain {
+    attributes?: PublicJWKeyCertificationOnDLT;
     controller: string;
-    publicJwk?: PublicJWKeyCertificationOnDLT;
-    type: string;
+    meta: PublicMetadataOnBlockchain;
+    type?: string;
 }
 /** Interface defining a public key definition entry in a DID Document.
  *  See: https://w3c-ccg.github.io/did-spec/#public-keys
@@ -37,7 +39,7 @@ export interface DidPublicKeyOnBlockchain {
  *  - type: the type of this public key, such as JsonWebKey2020 as defined in https://w3c-ccg.github.io/ld-cryptosuite-registry/
  *  - controller: the DID of the controller of this key.
  */
-export interface DidPublicKeyForSC extends DidPublicKeyOnBlockchain {
+export interface DidPublicKeyForSC extends PublicKeyResourceOnBlockchain {
     id: string;
 }
 /** Interface defining a public key definition entry in a DID Document.

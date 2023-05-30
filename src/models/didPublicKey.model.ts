@@ -2,6 +2,7 @@
 /* Apache License 2.0 */
 
 import { JWK, PublicJWKeyCertificationOnDLT } from "./jwk.model";
+import { PublicMetadataOnBlockchain } from "./metadata.model";
 
 /** NOTES:
  *  Public Key traceability stores the kid (key ID) asset using the fully qualified DID URL Syntax of the public key.
@@ -18,7 +19,7 @@ import { JWK, PublicJWKeyCertificationOnDLT } from "./jwk.model";
  *    NOTE: generate the 'thumbprint' in case of JSON Web Key format (RFC7638).
  *  - 'type': string that references exactly one verification method type, such as JsonWebKey2020 (see https://www.w3.org/TR/did-spec-registries/ ).
  *  - 'controller': the DID of the controller of this key.
- *  - 'publicKeyJwk': JSON Web Key that conforms to RFC7517. It MUST NOT contain private information.
+ *  - 'publicKeyJwk': the public 'attributes' of a JSON Web Key that conforms to RFC7517. It MUST NOT contain private information.
  */
 export interface DidVerificationPublicJWKey extends
     DidPublicKeyForSC
@@ -32,10 +33,11 @@ export interface DidVerificationPublicJWKey extends
 *  - controller: hashed DID of the controller / owner of this key.
 *  - type: the type of this public key, such as JsonWebKey2020 as defined in https://w3c-ccg.github.io/ld-cryptosuite-registry/
 */
-export interface DidPublicKeyOnBlockchain {
+export interface PublicKeyResourceOnBlockchain {
+  attributes?: PublicJWKeyCertificationOnDLT // instead of DID Document's 'publicJwk'
   controller: string; // hashed controller / owner DID
-  publicJwk?: PublicJWKeyCertificationOnDLT
-  type: string; // e.g.: "JsonWebKey2020"
+  meta: PublicMetadataOnBlockchain;
+  type?: string; // e.g.: "JsonWebKey2020"
 }
 
 /** Interface defining a public key definition entry in a DID Document.
@@ -46,7 +48,7 @@ export interface DidPublicKeyOnBlockchain {
  *  - type: the type of this public key, such as JsonWebKey2020 as defined in https://w3c-ccg.github.io/ld-cryptosuite-registry/
  *  - controller: the DID of the controller of this key.
  */
-export interface DidPublicKeyForSC extends DidPublicKeyOnBlockchain {
+export interface DidPublicKeyForSC extends PublicKeyResourceOnBlockchain {
   id: string;
 }
 
