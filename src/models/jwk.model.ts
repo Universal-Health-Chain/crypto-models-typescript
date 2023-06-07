@@ -290,5 +290,5 @@ export interface JWK extends
     /** JWK "x5u" (X.509 URL) Parameter */
     x5u?: string;
     [propName: string]: unknown;
-    sub: string; // who is the holder (DID), such as the controller of the key
+    sub?: string; // who is the holder (DID), such as the controller of the key
 }
