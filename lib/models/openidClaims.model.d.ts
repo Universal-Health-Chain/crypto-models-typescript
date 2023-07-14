@@ -1,4 +1,4 @@
-export declare const DegreeLicenseCertificateHL7 = "AA";
+export declare const DegreeLicenseCertificateHL7: string;
 export interface ClaimsFullOpenID extends ClaimsStandardOpenID, ClaimsAdditionalOpenID, ClaimsEndUserOpenID, ClaimProfessionalOpenID, ClaimEmergencyOpenID {
 }
 /** Use ISO 3166/ICAO 3-letter codes for 'country' [ICAO-Doc9303] instead of 2-letter ICAO codes.

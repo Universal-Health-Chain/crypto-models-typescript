@@ -240,5 +240,5 @@ export interface JWK extends PublicJWKeyCertificationOnDLT {
     /** JWK "x5u" (X.509 URL) Parameter */
     x5u?: string;
     [propName: string]: unknown;
-    sub: string;
+    sub?: string;
 }

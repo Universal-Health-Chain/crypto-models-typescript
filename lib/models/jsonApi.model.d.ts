@@ -4,6 +4,7 @@ import { DidDocument } from './didDocument.model';
 import { VerifiedClaimsAssuranceDLT } from './oidc4ida.claimsVerification.model';
 import { MetadataResearch } from './metadata.model';
 import { JWKeySet } from './jwk.model';
+import { TypePrimaryDoc } from './common.model';
 /** JSON-API common data:
  *  - id:  only required if the backend does not generate an ID.
  *  - type: reverse DNS is recommended.
@@ -127,8 +128,12 @@ export interface ResourceRequest {
     method: string;
     url: string;
 }
-/** Relationship of participants and related resource objects in a JSON:API Resource Object */
+/** TODO: review "related" data .
+ *  - "participants": DID Documents of different types of participants.
+ *  Note: MUST have "href" and can have additional "related" link data https://jsonapi.org/format/#document-links
+ */
 export interface ResourceRelationships {
+    links?: object;
     participants?: ParticipantsIdentity;
     related?: any;
 }
@@ -169,10 +174,16 @@ export interface ResourceObjectBase {
     relationships?: ResourceRelationships;
     type?: string;
 }
+/** The `didData.didDocument.id` field is required and it is the **DID** of the resource object (main identifier).
+ *  CAUTION: The internal `id` is only for the storage provider and it can be different to the DID.
+ */
 export interface ResourceObjectWithDIDCommAttachmentsAndJWKS extends ResourceObjectSC {
     attachments?: DIDCommAttachment[];
     jwks?: JWKeySet;
 }
+/** The `didData.didDocument.id` field is required and it is the **DID** of the resource object (main identifier).
+ *  CAUTION: The internal `id` is only for the storage provider and it can be different to the DID.
+ */
 export interface ResourceObjectSC extends ResourceObjectBase {
     didData?: DidData;
     meta?: MetadataResourceObject;
@@ -181,32 +192,57 @@ export interface ResourceObjectSC extends ResourceObjectBase {
     type?: string;
     verified_claims?: VerifiedClaimsAssuranceDLT;
 }
+/**
+ *  - attachments: use for unprocessed, embedded raw data (e.g. assurance of PDF or JPEG files)
+ *  - attributes: non-FHIR data source attributes (e.g.: schema.org, openEHR)
+ *  - didData: DID document and DID metadata.
+ *  - fullUrl: FHIR resource's URL in the patient's portal.
+ *  - included: de-identified resources for clinical research or other additional resources (e.g.: departments and employess of an organization)
+ *  - jwks: history of public keys
+ *  - meta: for example, creation timestamp (it can be different on the frontend app and in the backend service).
+ *  - request: same as FHIR request (it has method and url).
+ *  - relationships: relationships object with the DID Documents of the "participants" and additional "related" resources
+ *  - researchStatus: true when the anonymized and de-identifed attributes were already stored for research (avoid duplicated data for research).
+ *  - resource: FHIR resource
+ *  - type: reverse DNS, e.g.: "org.hl7.fhir.r4.observation".
+ *  - verified_claims: created by the API or SC for hash and claims of both raw data and standardized data
+ */
 export interface ResourceObjectExtended extends ResourceObjectWithDIDCommAttachmentsAndJWKS {
     attachments?: DIDCommAttachment[];
     attributes?: any;
     didData?: DidData;
+    fullUrl?: string;
     included?: ResourceObjectSC[];
     jwks?: JWKeySet;
+    meta?: MetadataResourceObject;
+    relationships?: ResourceRelationships;
     request?: ResourceRequest;
     researchStatus?: boolean;
+    resource?: object;
     type?: string;
     verified_claims?: VerifiedClaimsAssuranceDLT;
 }
-export declare enum PrimaryDocType {
-    batch = "batch",
-    collection = "collection",
-    document = "document",
-    transaction = "transaction"
+/** - data: array of resource objects
+ *  - type: type of resource objects and primary document (e.g.: "org.hl7.fhir.bundle.transaction+json-api" or "org.schema+json-api").
+ */
+export interface PrimaryDocBase {
+    data: ResourceObjectExtended[];
+    type: TypePrimaryDoc;
 }
-export declare enum MethodHTTP {
-    create = "POST",
-    delete = "DELETE",
-    read = "GET",
-    update = "PUT"
-}
-export declare type PrimaryDocTypes = PrimaryDocType.batch | PrimaryDocType.collection | PrimaryDocType.document | PrimaryDocType.transaction;
-export interface PrimaryDocSC {
+/** - data: array of resource objects.
+ *  - errors (optional): array of error objects.
+ *  - type: type of resource objects and primary document (e.g.: "org.hl7.fhir.bundle.transaction+json-api" or "org.schema+json-api").
+ */
+export interface PrimaryDocOnSC extends PrimaryDocBase {
     data: ResourceObjectExtended[];
     error?: ErrorResourceObject[];
-    type: PrimaryDocTypes;
+    type: TypePrimaryDoc;
+}
+/** - data: array of resource objects.
+ *  - errors (optional): array of error objects.
+ *  - id (optional): unique for the client application to identify the resource (e.g.: hash of the DID or URI for pseudo-anonymization)
+ *  - type: type of resource objects and primary document (e.g.: "org.hl7.fhir.bundle.transaction+json-api" or "org.schema+json-api").
+ */
+export interface PrimaryDoc extends PrimaryDocOnSC {
+    id?: string;
 }

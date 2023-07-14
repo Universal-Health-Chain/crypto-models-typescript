@@ -3,11 +3,11 @@
  *  This type is also used to store NTT-transformed polynomials, see Poly.NTT().
  *  Coefficients aren't always reduced. See Normalize().
  */
-declare type Poly = Uint16Array;
+type Poly = Uint16Array;
 /** A vector of K polynomials */
-declare type Vec = Poly[];
+type Vec = Poly[];
 /** A k by k matrix of polynomials. */
-declare type Mat = Vec[];
+type Mat = Vec[];
 /** A Kyber.CPAPKE private key. */
 interface KyberInternalCpapkePrivateKey {
     sh: Vec;

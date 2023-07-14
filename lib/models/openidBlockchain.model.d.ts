@@ -28,7 +28,7 @@ export interface EvidenceW3C {
  * - utility_bill: Verification based on a utility bill (this is to be deprecated in future releases and implementers are recommended to use the document type instead).
  * - electronic_signature: Verification based on an electronic signature.
  */
-export declare type EvidenceObjectDLT = EvidenceElectronicRecordDLT | EvidenceDocumentDLT | EvidenceVouchDLT | EvidenceBillDLT | EvidenceElectronicSignatureDLT;
+export type EvidenceObjectDLT = EvidenceElectronicRecordDLT | EvidenceDocumentDLT | EvidenceVouchDLT | EvidenceBillDLT | EvidenceElectronicSignatureDLT;
 /**
  * If the OP (operator) issues a txn, it MUST maintain a corresponding audit trail.
  * Audit trail at least consists of the following details:

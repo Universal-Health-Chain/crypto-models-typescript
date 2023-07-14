@@ -1,19 +1,6 @@
-import { DidData } from "./did.model";
-import { DIDCommAttachment } from "./didComm.model";
-import { IDTypePair, MetadataResourceObject, ResourceObjectWithDIDCommAttachmentsAndJWKS, ResourceRequest } from "./jsonApi.model";
 import { StandardJWE } from "./jwe.model";
-/** The `didData.didDocument.id` field is required and it is the **DID** of the resource object (main identifier).
- *  CAUTION: The internal `id` is only for the storage provider and it can be different to the DID.
- */
-export interface TxResourceObject extends ResourceObjectWithDIDCommAttachmentsAndJWKS {
-    attachments?: DIDCommAttachment[];
-    attributes?: any;
-    didData: DidData;
-    id?: string;
-    metadata?: MetadataResourceObject;
-    request?: ResourceRequest;
-    type?: string;
-}
+import { TypePrimaryDoc } from "./common.model";
+import { IDTypePair, PrimaryDoc, ResourceObjectWithDIDCommAttachmentsAndJWKS } from "./jsonApi.model";
 /** Transaction: see https://gitlab.com/universal-health-chain/backend/org-management-service/-/blob/main/endpoints/cds/v1/resources/transaction/README.md)
  *  - the "body" contains a JSON:API Primary Document.
  *  - the "client_id" contans what profile (wallet) has created the draft version or the final document.
@@ -23,13 +10,14 @@ export interface TxResourceObject extends ResourceObjectWithDIDCommAttachmentsAn
  *
  *  Note: both ID ("_id"), version ("_rev") are in the parent StorageBase object (from the database)
  */
-export interface TxDIDCommPayloadBase {
+export interface DIDCommPayloadBase {
     body: {
-        data: TxResourceObject[];
-        type: "transaction";
+        data: ResourceObjectWithDIDCommAttachmentsAndJWKS[];
+        type: TypePrimaryDoc;
     };
     client_id: string;
-    subject: string;
+    sub: string;
+    type: string;
 }
 /** Transaction: see https://gitlab.com/universal-health-chain/backend/org-management-service/-/blob/main/endpoints/cds/v1/resources/transaction/README.md)
  *  - the "aud" (audience) is the target endpoint URL.
@@ -45,13 +33,9 @@ export interface TxDIDCommPayloadBase {
  *  - the "subject" refers to DID of the target entity, e.g.: an organization, professional or patient DID.
  *  - the "type" is set in UHC as "data+jar" to predict the content of the message
  */
-export interface TxDIDCommPayloadFull extends TxDIDCommPayloadBase {
+export interface DIDCommPayloadFull extends DIDCommPayloadBase {
     aud: string;
-    body: {
-        data: TxResourceObject[];
-        id?: string;
-        type: "transaction";
-    };
+    body: PrimaryDoc;
     client_id: string;
     exp: number;
     jti?: string;
@@ -126,7 +110,7 @@ export interface TxCompositionBase {
  *  Note: the deactivation date is the "updated" timestamp.
  */
 export interface TxCompositionUnencrypted extends TxCompositionBase {
-    content?: TxDIDCommPayloadBase;
+    content?: DIDCommPayloadBase;
     indexed?: IndexUnsafe;
 }
 /** Decrypted indexed attributes, they SHALL be encrypted before being stored.

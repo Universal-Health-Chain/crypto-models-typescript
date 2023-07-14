@@ -76,7 +76,7 @@ export interface VerificationEvidencesOpenID extends VerificationCommon {
     trust_framework: string;
     evidence?: EvidenceObjectOpenID[];
 }
-export declare type EvidenceObjectOpenID = EvidenceElectronicRecordOpenID | EvidenceDocumentOpenID | EvidenceElectronicRecordOpenID | EvidenceBillOpenID | EvidenceElectronicSignatureOpenID;
+export type EvidenceObjectOpenID = EvidenceElectronicRecordOpenID | EvidenceDocumentOpenID | EvidenceElectronicRecordOpenID | EvidenceBillOpenID | EvidenceElectronicSignatureOpenID;
 /** 'verifier.txn' is the evidence transaction ID
  * Predefined method values are given in Verification Methods.
  * - pipp (Physical In-Person Proofing)
@@ -95,7 +95,7 @@ export interface CommonSubElementOpenID {
     method: string;
     time?: string;
 }
-export declare type ContentAttachedOpenID = ContentLinkedOpenID | ContentEmbeddedOpenID;
+export type ContentAttachedOpenID = ContentLinkedOpenID | ContentEmbeddedOpenID;
 /** The used language is not specified, but is usually bound to the jurisdiction of the underlying trust framework of the OP. */
 export interface ContentEmbeddedOpenID {
     desc?: string;

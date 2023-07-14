@@ -1,25 +1,9 @@
 /* Copyright (c) ConnectHealth Group (Conéctate Soluciones y Aplicaciones SL, Connecting Solutions & Applications Ltd.) */
 /* Apache License 2.0 */
 
-import { DidData } from "./did.model";
-import { DIDCommAttachment } from "./didComm.model";
-import { IDTypePair, MetadataResourceObject, ResourceObjectWithDIDCommAttachmentsAndJWKS, ResourceRequest } from "./jsonApi.model";
 import { StandardJWE } from "./jwe.model";
-
-/** The `didData.didDocument.id` field is required and it is the **DID** of the resource object (main identifier).
- *  CAUTION: The internal `id` is only for the storage provider and it can be different to the DID.
- */
-export interface TxResourceObject extends
-    ResourceObjectWithDIDCommAttachmentsAndJWKS // attachments, attributes, id, type
-{
-    attachments?: DIDCommAttachment[];
-    attributes?: any;
-    didData: DidData; // the DID is in the "didData.didDocument.id"
-    id?: string; // this "id" can be internal for the storage provider and different to the DID
-    metadata?: MetadataResourceObject;
-    request?: ResourceRequest;
-    type?: string;
-}
+import { TypePrimaryDoc } from "./common.model";
+import { IDTypePair, PrimaryDoc, ResourceObjectWithDIDCommAttachmentsAndJWKS } from "./jsonApi.model";
 
 /** Transaction: see https://gitlab.com/universal-health-chain/backend/org-management-service/-/blob/main/endpoints/cds/v1/resources/transaction/README.md)
  *  - the "body" contains a JSON:API Primary Document.
@@ -30,13 +14,14 @@ export interface TxResourceObject extends
  *
  *  Note: both ID ("_id"), version ("_rev") are in the parent StorageBase object (from the database)
  */
-export interface TxDIDCommPayloadBase {
+export interface DIDCommPayloadBase {
     body: {
-        data: TxResourceObject[],
-        type: "transaction";
-    },
+        data: ResourceObjectWithDIDCommAttachmentsAndJWKS[];
+        type: TypePrimaryDoc; // e.g.: "org.hl7.fhir.bundle.transaction+json-api" or "org.schema+json-api";
+    };
     client_id: string; // who is the creator of this version of the Primary Document.
-    subject: string; // DID of the target entity, e.g.: an organization, professional or patient DID.
+    sub: string; // DID of the target entity, e.g.: an organization, professional or patient DID.
+    type: string; // e.g.: "jwm"
 }
 
 /** Transaction: see https://gitlab.com/universal-health-chain/backend/org-management-service/-/blob/main/endpoints/cds/v1/resources/transaction/README.md)
@@ -53,15 +38,11 @@ export interface TxDIDCommPayloadBase {
  *  - the "subject" refers to DID of the target entity, e.g.: an organization, professional or patient DID.
  *  - the "type" is set in UHC as "data+jar" to predict the content of the message 
  */
- export interface TxDIDCommPayloadFull extends
-    TxDIDCommPayloadBase
+ export interface DIDCommPayloadFull extends
+    DIDCommPayloadBase
 {
     aud: string;
-    body: { // JSON:API "Primary Document" containing the resouce objects in the "data" property.
-        data: TxResourceObject[], // resource objects as per the JSON:API "Primary Document"
-        id?: string; // optional: unique for the client application to identify the transaction internally.
-        type: "transaction";
-    },
+    body: PrimaryDoc,
     client_id: string;
     exp: number;
     jti?: string; // same as the storage document "_id"
@@ -148,7 +129,7 @@ export interface TxCompositionBase { // old StorageBase
 export interface TxCompositionUnencrypted extends
     TxCompositionBase
 {
-    content?:   TxDIDCommPayloadBase;   // decrypted payload, it can be encrypted as the `jwe` element before being stored.
+    content?:   DIDCommPayloadBase;   // decrypted payload, it can be encrypted as the `jwe` element before being stored.
     indexed?:   IndexUnsafe;            // unsafe index of attributes (`name` and `value`), not protected by HMAC.
 }
 

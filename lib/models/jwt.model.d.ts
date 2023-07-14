@@ -1,5 +1,5 @@
 import { JWK } from "./jwk.model";
-export declare type JWS = string;
+export type JWS = string;
 export declare const schemaJWS: {
     $schema: string;
     $id: string;
