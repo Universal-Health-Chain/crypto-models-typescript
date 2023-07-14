@@ -1,15 +1,5 @@
 import { StandardJWE } from "./jwe.model";
 import { CommonPayloadJWM } from "./jwm.model";
-export declare enum MimeTypeDIDCommFull {
-    encrypted = "application/didcomm-encrypted+json",
-    signed = "application/didcomm-signed+json",
-    plaintext = "application/didcomm-plain+json"
-}
-export declare enum MimeTypeDIDComm {
-    encrypted = "didcomm-encrypted+json",
-    signed = "didcomm-signed+json",
-    plaintext = "didcomm-plain+json"
-}
 export declare const TypeAcceptsDIDCommV2 = "didcomm/v2";
 /** A DIDComm encrypted message is an encrypted JWM (JSON Web Messages) and hides its content from all but authorized recipients,
  *  discloses and proves the sender to exactly and only those recipients, and provides integrity guarantees.

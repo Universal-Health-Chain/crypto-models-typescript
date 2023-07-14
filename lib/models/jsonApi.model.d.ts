@@ -233,7 +233,7 @@ export interface PrimaryDocBase {
  *  - errors (optional): array of error objects.
  *  - type: type of resource objects and primary document (e.g.: "org.hl7.fhir.bundle.transaction+json-api" or "org.schema+json-api").
  */
-export interface PrimaryDocOnSC extends PrimaryDocBase {
+export interface PrimaryDocFromSC extends PrimaryDocBase {
     data: ResourceObjectExtended[];
     error?: ErrorResourceObject[];
     type: TypePrimaryDoc;
@@ -243,6 +243,6 @@ export interface PrimaryDocOnSC extends PrimaryDocBase {
  *  - id (optional): unique for the client application to identify the resource (e.g.: hash of the DID or URI for pseudo-anonymization)
  *  - type: type of resource objects and primary document (e.g.: "org.hl7.fhir.bundle.transaction+json-api" or "org.schema+json-api").
  */
-export interface PrimaryDoc extends PrimaryDocOnSC {
+export interface PrimaryDoc extends PrimaryDocFromSC {
     id?: string;
 }
