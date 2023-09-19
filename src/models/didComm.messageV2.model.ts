@@ -26,7 +26,7 @@ export const TypeAcceptsDIDCommV2   = "didcomm/v2"
  *  - created_time: OPTIONAL. Message Created Time. The created_time attribute is used for the sender to express when they created the message, expressed in UTC Epoch Seconds (seconds since 1970-01-01T00:00:00Z UTC) [link](1970-01-01T00:00:00Z UTC). This attribute is informative to the recipient, and may be relied on by protocols.
  *  - expires_time: OPTIONAL. Message Expired Time. The expires_time attribute is used for the sender to express when they consider the message to be expired, expressed in UTC Epoch Seconds (seconds since 1970-01-01T00:00:00Z UTC) [link](1970-01-01T00:00:00Z UTC). This attribute signals when the message is considered no longer valid by the sender. When omitted, the message is considered to have no expiration by the sender.
  */
-export interface DIDCommMessage extends
+export interface DIDCommMessageV2 extends
     CommonPayloadJWM
 {
     attachments?:   DIDCommAttachment[];    // OPTIONAL. See Attachments for detail.
@@ -124,7 +124,7 @@ export interface PlainCompactJWM {
 export interface DecipheredDIDCommJWE extends
     StandardJWE
 {
-    plaintext:      DIDCommMessage;
+    plaintext:      DIDCommMessageV2;
 }
 
 /** DIDComm Messaging is based on DIDs and their associated DID Documents.
@@ -134,7 +134,7 @@ export interface DecipheredDIDCommJWE extends
  *  - from_prior: REQUIRED. A JWT, with sub: new DID and iss: prior DID, with a signature from a key authorized by prior DID.
  */
 export interface DIDCommRotation extends
-    DIDCommMessage
+    DIDCommMessageV2
 {
     from_prior: string; // REQUIRED. A JWT, with sub: new DID and iss: prior DID, with a signature from a key authorized by prior DID.
 }

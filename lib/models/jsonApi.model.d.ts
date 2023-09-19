@@ -1,10 +1,18 @@
 import { DidData } from './did.model';
-import { DIDCommAttachment } from './didComm.model';
+import { DIDCommAttachment } from './didComm.messageV2.model';
 import { DidDocument } from './didDocument.model';
 import { VerifiedClaimsAssuranceDLT } from './oidc4ida.claimsVerification.model';
 import { MetadataResearch } from './metadata.model';
 import { JWKeySet } from './jwk.model';
 import { TypePrimaryDoc } from './common.model';
+/** Required elements: data, id and type (reverse-DNS is preferred) */
+export interface PrimaryDocument extends IDTypePair {
+    data: any[];
+    errors?: any[];
+    id: string;
+    type: string;
+    [key: string]: any;
+}
 /** JSON-API common data:
  *  - id:  only required if the backend does not generate an ID.
  *  - type: reverse DNS is recommended.

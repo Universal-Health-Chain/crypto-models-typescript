@@ -130,12 +130,12 @@ export interface RecipientsData {
  *  - with the encryption algorithm defined by the header element 'protected.alg' and 'protected.enc'.
  */
 export interface StandardJWE extends
-    BaseJWE,         // protected, unprotected, recipients
-    JWEDataAES    // ciphertext, iv and tag
+    BaseJWE,    // protected, unprotected, recipients
+    JWEDataAES  // ciphertext, iv and tag
 {
-    protected:  string;                         // Encoded a base64-url string containing the encryption algorithm ('alg') performed on the plaintext (e.g.: 'dir' for direct encryption).
-    unprotected?:       UnprotectedHeadersJWE;             // e.g.: jku
-    recipients:         RecipientDataJWE[];  // CEK encrypted to each recipient // Includes ephemeral (anoncrypt) key
+    protected:      string;                 // Encoded a base64-url string containing the encryption algorithm ('alg') performed on the plaintext (e.g.: 'dir' for direct encryption).
+    unprotected?:   UnprotectedHeadersJWE;  // e.g.: jku
+    recipients:     RecipientDataJWE[];     // CEK encrypted to each recipient // Includes ephemeral (anoncrypt) key
 }
 
 /** Decoded protected header claims in a JWE.
